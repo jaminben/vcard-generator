@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
 
+# Permissions required for GitHub Pages deployment
 permissions:
   contents: read
   pages: write
