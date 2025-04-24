@@ -1,0 +1,7 @@
+# Ignore the public directory as it's a build output
+public/
+# Ignore any other build artifacts
+*.log
+node_modules/
+dist/
+build/ 

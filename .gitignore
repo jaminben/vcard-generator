@@ -21,6 +21,7 @@ npm-debug.log*
 # Build files
 dist/
 build/
+public/
 
 # Test files
 coverage/
