@@ -10,6 +10,10 @@ export class QRCodeGenerator {
   generateQRCode(elementId, data) {
     try {
       const qrcodeDiv = document.getElementById(elementId);
+      if (!qrcodeDiv) {
+        throw new Error(`Element with id ${elementId} not found`);
+      }
+      
       qrcodeDiv.innerHTML = '';
       
       if (!data) {
@@ -17,15 +21,8 @@ export class QRCodeGenerator {
         return;
       }
 
-      const container = document.createElement('div');
-      container.className = 'relative';
-      qrcodeDiv.appendChild(container);
-
-      const tempContainer = document.createElement('div');
-      tempContainer.style.display = 'none';
-      container.appendChild(tempContainer);
-
-      new QRCode(tempContainer, {
+      // Create QR code directly in the target div
+      const qrCode = new QRCode(qrcodeDiv, {
         text: data,
         width: 256,
         height: 256,
@@ -34,34 +31,65 @@ export class QRCodeGenerator {
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      const qrCanvas = tempContainer.querySelector('canvas');
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = 256;
-      finalCanvas.height = 256;
-      container.appendChild(finalCanvas);
+      // Wait for the QR code to be fully rendered
+      const checkQRCode = () => {
+        const qrCanvas = qrcodeDiv.querySelector('canvas');
+        if (!qrCanvas) {
+          console.log('Waiting for QR code canvas...');
+          setTimeout(checkQRCode, 100);
+          return;
+        }
 
-      const ctx = finalCanvas.getContext('2d');
-      ctx.drawImage(qrCanvas, 0, 0);
+        console.log('QR code canvas found, proceeding with rendering');
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = 256;
+        finalCanvas.height = 256;
+        
+        // Insert the final canvas before the QR code canvas
+        qrcodeDiv.insertBefore(finalCanvas, qrCanvas);
 
-      if (this.logoData) {
-        const logo = new Image();
-        logo.onload = () => {
-          const logoSize = 64;
-          const logoX = (256 - logoSize) / 2;
-          const logoY = (256 - logoSize) / 2;
+        const ctx = finalCanvas.getContext('2d');
+        if (!ctx) {
+          throw new Error('Could not get canvas context');
+        }
 
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4);
-          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+        // Clear the canvas before drawing
+        ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
+        
+        // Draw the QR code
+        ctx.drawImage(qrCanvas, 0, 0);
 
-          this._setupDownloadButton(container, finalCanvas, elementId);
-        };
-        logo.src = this.logoData;
-      } else {
-        this._setupDownloadButton(container, finalCanvas, elementId);
-      }
+        if (this.logoData) {
+          const logo = new Image();
+          logo.onload = () => {
+            const logoSize = 64;
+            const logoX = (256 - logoSize) / 2;
+            const logoY = (256 - logoSize) / 2;
 
-      tempContainer.remove();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4);
+            ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+
+            // Remove the original QR code canvas
+            qrCanvas.remove();
+            this._setupDownloadButton(qrcodeDiv, finalCanvas, elementId);
+          };
+          logo.onerror = () => {
+            console.error('Error loading logo image');
+            // Remove the original QR code canvas
+            qrCanvas.remove();
+            this._setupDownloadButton(qrcodeDiv, finalCanvas, elementId);
+          };
+          logo.src = this.logoData;
+        } else {
+          // Remove the original QR code canvas
+          qrCanvas.remove();
+          this._setupDownloadButton(qrcodeDiv, finalCanvas, elementId);
+        }
+      };
+
+      // Start checking for QR code readiness
+      setTimeout(checkQRCode, 500); // Give more initial time for QR code to render
     } catch (error) {
       console.error('Error generating QR code:', error);
       document.getElementById(elementId).innerHTML = `
