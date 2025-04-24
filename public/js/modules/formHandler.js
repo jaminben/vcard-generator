@@ -1,11 +1,11 @@
-class FormHandler {
+export class FormHandler {
     getFormData() {
         const form = document.getElementById('vcardForm');
         if (!form) {
             throw new Error('Form not found');
         }
 
-        const formData = {
+        const data = {
             name: form.querySelector('#name')?.value || '',
             title: form.querySelector('#title')?.value || '',
             email: form.querySelector('#email')?.value || '',
@@ -13,8 +13,8 @@ class FormHandler {
             company: form.querySelector('#company')?.value || ''
         };
 
-        this.validateFormData(formData);
-        return formData;
+        this.validateFormData(data);
+        return data;
     }
 
     validateFormData(data) {

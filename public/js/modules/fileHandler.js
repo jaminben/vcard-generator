@@ -1,4 +1,4 @@
-class FileHandler {
+export class FileHandler {
     async handlePhotoFile(file) {
         return this.handleImageFile(file, 'photo');
     }
@@ -9,20 +9,14 @@ class FileHandler {
 
     async handleImageFile(file, type) {
         if (!file) {
-            throw new Error('No file provided');
+            throw new Error(`No ${type} file provided`);
         }
 
         if (!file.type.startsWith('image/')) {
-            throw new Error('File must be an image');
+            throw new Error(`File must be an image for ${type}`);
         }
 
-        try {
-            const dataUrl = await this.readFileAsDataURL(file);
-            return dataUrl;
-        } catch (error) {
-            console.error(`Error handling ${type} file:`, error);
-            throw new Error(`Error processing ${type} file`);
-        }
+        return this.readFileAsDataURL(file);
     }
 
     readFileAsDataURL(file) {
