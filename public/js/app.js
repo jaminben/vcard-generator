@@ -13,6 +13,7 @@ class VCardApp {
     this.initializeEventListeners();
     this.loadDefaultLogo();
     FormHandler.restoreFormValues();
+    this.restoreGeneratedData();
   }
 
   initializeEventListeners() {
@@ -81,36 +82,91 @@ class VCardApp {
     }
   }
 
-  generateVCard() {
-    const contact = {
-      firstName: document.getElementById('firstName').value,
-      lastName: document.getElementById('lastName').value,
-      phone: document.getElementById('phone').value,
-      whatsapp: document.getElementById('whatsapp').value,
-      email: document.getElementById('email').value,
-      website: document.getElementById('website').value,
-      company: document.getElementById('company').value,
-      jobTitle: document.getElementById('jobTitle').value,
-      photo: this.photoData
+  saveGeneratedData(contact, vcardData, simplifiedVCard) {
+    const generatedData = {
+      contact,
+      vcardData,
+      simplifiedVCard,
+      photoData: this.photoData,
+      logoData: this.logoData,
+      timestamp: new Date().toISOString()
     };
+    localStorage.setItem('vcardGeneratedData', JSON.stringify(generatedData));
+  }
 
-    const vcardData = this.vcardGenerator.generateVCard(contact);
-    const simplifiedVCard = this.vcardGenerator.generateSimplifiedVCard(contact);
+  restoreGeneratedData() {
+    const savedData = localStorage.getItem('vcardGeneratedData');
+    if (savedData) {
+      const generatedData = JSON.parse(savedData);
+      this.photoData = generatedData.photoData;
+      this.logoData = generatedData.logoData;
+      
+      if (this.logoData) {
+        this.qrGenerator.setLogo(this.logoData);
+      }
 
-    // Generate QR codes
+      // Restore photo preview if exists
+      if (this.photoData) {
+        const preview = document.getElementById('previewImage');
+        if (preview) {
+          preview.src = this.photoData;
+          document.getElementById('photoPreview').classList.remove('hidden');
+        }
+      }
+
+      // Restore logo preview if exists
+      if (this.logoData) {
+        const preview = document.getElementById('previewLogo');
+        if (preview) {
+          preview.src = this.logoData;
+          document.getElementById('logoPreview').classList.remove('hidden');
+        }
+      }
+
+      // Regenerate QR codes with saved data
+      this.generateVCard(generatedData.contact, generatedData.vcardData, generatedData.simplifiedVCard);
+    }
+  }
+
+  generateVCard(contact = null, savedVcardData = null, savedSimplifiedVCard = null) {
+    if (!contact) {
+      contact = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        phone: document.getElementById('phone').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        email: document.getElementById('email').value,
+        website: document.getElementById('website').value,
+        company: document.getElementById('company').value,
+        jobTitle: document.getElementById('jobTitle').value,
+        photo: this.photoData
+      };
+    }
+
+    const vcardData = savedVcardData || this.vcardGenerator.generateVCard(contact);
+    const simplifiedVCard = savedSimplifiedVCard || this.vcardGenerator.generateSimplifiedVCard(contact);
+
+    // Save the generated data
+    this.saveGeneratedData(contact, vcardData, simplifiedVCard);
+
+    // Generate vCard QR code
     this.qrGenerator.generateQRCode('qrcode', vcardData);
 
     // Generate WhatsApp QR code if number is provided
     if (contact.whatsapp) {
-      const whatsappUrl = `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`;
+      const whatsappMessage = document.getElementById('whatsappMessage')?.value || '';
+      const whatsappUrl = `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMessage)}`;
       this.qrGenerator.generateQRCode('whatsappQrcode', whatsappUrl);
     }
 
     // Generate SMS QR code
-    const smsUrl = `sms:${contact.phone.replace(/\D/g, '')}`;
-    this.qrGenerator.generateQRCode('smsQrcode', smsUrl);
+    if (contact.phone) {
+      const smsMessage = document.getElementById('smsMessage')?.value || '';
+      const smsUrl = `sms:${contact.phone.replace(/\D/g, '')}?body=${encodeURIComponent(smsMessage)}`;
+      this.qrGenerator.generateQRCode('smsQrcode', smsUrl);
+    }
 
-    // Download vCard
+    // Update download links
     this.vcardGenerator.downloadVCard('contact.vcf', vcardData);
   }
 }
@@ -118,55 +174,4 @@ class VCardApp {
 // Initialize the application when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   new VCardApp();
-});
-
-// Default images
-const DEFAULT_PROFILE_IMAGE = 'images/default-profile.png';
-const DEFAULT_LOGO_IMAGE = 'images/default-logo.png';
-const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBub3QgYXZhaWxhYmxlPC90ZXh0Pjwvc3ZnPg==';
-
-// Load default images
-const defaultProfileImage = new Image();
-defaultProfileImage.onerror = () => {
-    console.error('Failed to load default profile image');
-    defaultProfileImage.src = PLACEHOLDER_IMAGE;
-};
-defaultProfileImage.src = DEFAULT_PROFILE_IMAGE;
-
-const defaultLogoImage = new Image();
-defaultLogoImage.onerror = () => {
-    console.error('Failed to load default logo image');
-    defaultLogoImage.src = PLACEHOLDER_IMAGE;
-};
-defaultLogoImage.src = DEFAULT_LOGO_IMAGE;
-
-// Update the image preview functions
-function handleImagePreview(input, previewId, feedbackId, defaultImage) {
-    const file = input.files[0];
-    if (!file) {
-        document.getElementById(previewId).classList.add('hidden');
-        document.getElementById(feedbackId).textContent = '';
-        return;
-    }
-
-    if (!file.type.startsWith('image/')) {
-        document.getElementById(feedbackId).textContent = 'Please select an image file';
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-            document.getElementById(previewId).classList.remove('hidden');
-            document.getElementById(previewId).querySelector('img').src = e.target.result;
-            document.getElementById(feedbackId).textContent = '';
-        };
-        img.onerror = () => {
-            document.getElementById(feedbackId).textContent = 'Failed to load image';
-            document.getElementById(previewId).querySelector('img').src = defaultImage;
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-} 
+}); 

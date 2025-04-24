@@ -1,28 +1,4 @@
 export class VCardGenerator {
-  generate(data) {
-    if (!data) {
-      throw new Error('No data provided for vCard generation');
-    }
-
-    const vcard = [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      `FN:${this.escapeValue(data.name)}`,
-      data.title ? `TITLE:${this.escapeValue(data.title)}` : '',
-      `EMAIL:${this.escapeValue(data.email)}`,
-      data.phone ? `TEL:${this.escapeValue(data.phone)}` : '',
-      data.company ? `ORG:${this.escapeValue(data.company)}` : '',
-      'END:VCARD'
-    ].filter(line => line !== '').join('\n');
-
-    return vcard;
-  }
-
-  escapeValue(value) {
-    if (!value) return '';
-    return value.replace(/[\\,;]/g, '\\$&');
-  }
-
   generateVCard({ firstName, lastName, phone, email, whatsapp = '', website = '', company = '', jobTitle = '', photo = '' }) {
     const vcard = [
       'BEGIN:VCARD',
