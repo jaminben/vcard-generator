@@ -1,7 +1,8 @@
-import { VCardGenerator } from './modules/vcard.js';
-import { QRCodeGenerator } from './modules/qrcode.js';
-import { FileHandler } from './modules/fileHandler.js';
-import { FormHandler } from './modules/formHandler.js';
+// Import modules
+const VCardGenerator = window.VCardGenerator;
+const QRCodeGenerator = window.QRCodeGenerator;
+const FileHandler = window.FileHandler;
+const FormHandler = window.FormHandler;
 
 class VCardApp {
     constructor() {

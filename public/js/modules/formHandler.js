@@ -1,4 +1,4 @@
-export class FormHandler {
+class FormHandler {
     getFormData() {
         const form = document.getElementById('vcardForm');
         if (!form) {
@@ -13,36 +13,26 @@ export class FormHandler {
             company: form.querySelector('#company')?.value || ''
         };
 
-        // Validate the form data
-        const validation = this.validateFormData(formData);
-        if (!validation.isValid) {
-            throw new Error(validation.errors.join(', '));
-        }
-
+        this.validateFormData(formData);
         return formData;
     }
 
     validateFormData(data) {
-        const errors = [];
-
-        if (!data.name.trim()) {
-            errors.push('Name is required');
+        if (!data.name) {
+            throw new Error('Name is required');
         }
 
-        if (!data.email.trim()) {
-            errors.push('Email is required');
-        } else if (!this.isValidEmail(data.email)) {
-            errors.push('Invalid email format');
+        if (!data.email) {
+            throw new Error('Email is required');
+        }
+
+        if (data.email && !this.isValidEmail(data.email)) {
+            throw new Error('Invalid email format');
         }
 
         if (data.phone && !this.isValidPhone(data.phone)) {
-            errors.push('Invalid phone format');
+            throw new Error('Invalid phone format');
         }
-
-        return {
-            isValid: errors.length === 0,
-            errors
-        };
     }
 
     isValidEmail(email) {

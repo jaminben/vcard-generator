@@ -4,27 +4,23 @@ export class VCardGenerator {
       throw new Error('No data provided for vCard generation');
     }
 
+    const escapeValue = (value) => {
+      if (!value) return '';
+      return value.replace(/[;,\n]/g, '\\$&');
+    };
+
     const vcard = [
       'BEGIN:VCARD',
       'VERSION:3.0',
-      `FN:${this.escapeValue(data.name)}`,
-      `TITLE:${this.escapeValue(data.title)}`,
-      `EMAIL:${this.escapeValue(data.email)}`,
-      `TEL:${this.escapeValue(data.phone)}`,
-      `ORG:${this.escapeValue(data.company)}`,
+      `FN:${escapeValue(data.name)}`,
+      data.title ? `TITLE:${escapeValue(data.title)}` : '',
+      data.email ? `EMAIL:${escapeValue(data.email)}` : '',
+      data.phone ? `TEL:${escapeValue(data.phone)}` : '',
+      data.company ? `ORG:${escapeValue(data.company)}` : '',
       'END:VCARD'
-    ].join('\n');
+    ].filter(line => line).join('\n');
 
     return vcard;
-  }
-
-  escapeValue(value) {
-    if (!value) return '';
-    return value
-      .replace(/\\/g, '\\\\')
-      .replace(/,/g, '\\,')
-      .replace(/;/g, '\\;')
-      .replace(/\n/g, '\\n');
   }
 
   generateVCard({ firstName, lastName, phone, email, whatsapp = '', website = '', company = '', jobTitle = '', photo = '' }) {

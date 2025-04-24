@@ -1,21 +1,13 @@
-export class FileHandler {
+class FileHandler {
     async handlePhotoFile(file) {
-        return this.handleImageFile(file, {
-            maxWidth: 200,
-            maxHeight: 200,
-            quality: 0.8
-        });
+        return this.handleImageFile(file, 'photo');
     }
 
     async handleLogoFile(file) {
-        return this.handleImageFile(file, {
-            maxWidth: 100,
-            maxHeight: 100,
-            quality: 0.8
-        });
+        return this.handleImageFile(file, 'logo');
     }
 
-    async handleImageFile(file, options) {
+    async handleImageFile(file, type) {
         if (!file) {
             throw new Error('No file provided');
         }
@@ -25,21 +17,19 @@ export class FileHandler {
         }
 
         try {
-            const imageUrl = await this.readFileAsDataURL(file);
-            return imageUrl;
+            const dataUrl = await this.readFileAsDataURL(file);
+            return dataUrl;
         } catch (error) {
-            console.error('Error handling image file:', error);
-            throw new Error('Failed to process image file');
+            console.error(`Error handling ${type} file:`, error);
+            throw new Error(`Error processing ${type} file`);
         }
     }
 
     readFileAsDataURL(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            
             reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error('Failed to read file'));
-            
+            reader.onerror = () => reject(new Error('Error reading file'));
             reader.readAsDataURL(file);
         });
     }

@@ -8,15 +8,12 @@ export class QRCodeGenerator {
   }
 
   generateQRCode(vcard, element) {
+    if (!element) {
+      throw new Error('QR code element not found');
+    }
+
     try {
-      if (!element) {
-        throw new Error('QR code element not found');
-      }
-
-      // Clear any existing QR code
-      element.innerHTML = '';
-
-      // Create QR code with error correction level H (highest)
+      element.innerHTML = ''; // Clear previous QR code
       new QRCode(element, {
         text: vcard,
         width: 200,
@@ -66,7 +63,6 @@ export class QRCodeGenerator {
     } catch (error) {
       console.error('Error generating QR code:', error);
       element.innerHTML = '<p class="text-red-500">Error generating QR code</p>';
-      throw error;
     }
   }
 
