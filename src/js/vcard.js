@@ -21,14 +21,14 @@ document.body.innerHTML = `
       <label for="phone" class="block text-sm font-medium text-gray-900 mb-1">Phone Number <span class="text-red-600" aria-hidden="true">*</span></label>
       <input type="tel" id="phone" name="phone" placeholder="Phone Number" required
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true" pattern="[0-9+\s()-]{10,}">
+        aria-required="true" pattern="[0-9+\s\(\)\-]{10,}">
       <p class="text-sm text-gray-600 mt-1">Format: +1 (555) 555-5555</p>
     </div>
     <div>
       <label for="whatsapp" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Number</label>
       <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp Number"
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        pattern="[0-9+\s()-]{10,}">
+        pattern="[0-9+\s\(\)\-]{10,}">
     </div>
     <div>
       <label for="email" class="block text-sm font-medium text-gray-900 mb-1">Email Address <span class="text-red-600" aria-hidden="true">*</span></label>
@@ -622,10 +622,9 @@ function updatePhoneNumber(input, value) {
 
 // Function to update message templates
 function updateMessageTemplates(firstName) {
-  if (firstName) {
-    document.getElementById('whatsappMessage').value = `Hi ${firstName}, this is a WhatsApp message`;
-    document.getElementById('smsMessage').value = `Hi ${firstName}, this is an SMS message`;
-  }
+  const name = firstName || 'me';
+  document.getElementById('whatsappMessage').value = `hi from ${name} on whatsapp`;
+  document.getElementById('smsMessage').value = `hi from ${name} on sms`;
 }
 
 // Add event listeners for phone number formatting
