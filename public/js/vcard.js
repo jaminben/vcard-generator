@@ -4,7 +4,7 @@ import { QRCodeGenerator } from './modules/qrcode.js';
 import { FileHandler } from './modules/fileHandler.js';
 import { FormHandler } from './modules/formHandler.js';
 
-class VCardApp {
+export class VCardApp {
     constructor() {
         this.vcardGenerator = new VCardGenerator();
         this.qrCodeGenerator = new QRCodeGenerator();
