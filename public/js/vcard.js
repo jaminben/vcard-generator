@@ -40,7 +40,14 @@ export class VCardApp {
             const vcard = this.vcardGenerator.generate(formData);
             
             this.updatePreview(formData);
-            this.qrCodeGenerator.generateQRCode(vcard, document.getElementById('qrcode'));
+            
+            const qrCodeElement = document.getElementById('qrcode');
+            if (qrCodeElement) {
+                // Clear any existing QR code
+                qrCodeElement.innerHTML = '';
+                // Generate new QR code
+                this.qrCodeGenerator.generateQRCode(vcard, qrCodeElement);
+            }
             
             const downloadBtn = document.getElementById('downloadBtn');
             if (downloadBtn) {

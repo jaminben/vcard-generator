@@ -13,7 +13,10 @@ export class QRCodeGenerator {
     }
 
     try {
+      // Clear previous QR code
       element.innerHTML = '';
+      
+      // Create a new QR code
       new QRCode(element, {
         text: vcard,
         width: 128,
