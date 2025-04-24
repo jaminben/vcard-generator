@@ -5,23 +5,31 @@ export class FormHandler {
             throw new Error('Form not found');
         }
 
-        return {
-            name: form.querySelector('#name').value,
-            title: form.querySelector('#title').value,
-            email: form.querySelector('#email').value,
-            phone: form.querySelector('#phone').value,
-            company: form.querySelector('#company').value
+        const formData = {
+            name: form.querySelector('#name')?.value || '',
+            title: form.querySelector('#title')?.value || '',
+            email: form.querySelector('#email')?.value || '',
+            phone: form.querySelector('#phone')?.value || '',
+            company: form.querySelector('#company')?.value || ''
         };
+
+        // Validate the form data
+        const validation = this.validateFormData(formData);
+        if (!validation.isValid) {
+            throw new Error(validation.errors.join(', '));
+        }
+
+        return formData;
     }
 
     validateFormData(data) {
         const errors = [];
 
-        if (!data.name) {
+        if (!data.name.trim()) {
             errors.push('Name is required');
         }
 
-        if (!data.email) {
+        if (!data.email.trim()) {
             errors.push('Email is required');
         } else if (!this.isValidEmail(data.email)) {
             errors.push('Invalid email format');
@@ -43,7 +51,7 @@ export class FormHandler {
     }
 
     isValidPhone(phone) {
-        const phoneRegex = /^\+?[\d\s-()]+$/;
+        const phoneRegex = /^\+?[\d\s-()]{10,}$/;
         return phoneRegex.test(phone);
     }
 } 

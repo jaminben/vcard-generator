@@ -19,10 +19,18 @@ class VCardApp {
         const photoInput = document.getElementById('photo');
         const logoInput = document.getElementById('logo');
 
-        generateBtn.addEventListener('click', () => this.generateVCard());
-        downloadBtn.addEventListener('click', () => this.downloadVCard());
-        photoInput.addEventListener('change', (e) => this.handlePhotoUpload(e));
-        logoInput.addEventListener('change', (e) => this.handleLogoUpload(e));
+        if (generateBtn) {
+            generateBtn.addEventListener('click', () => this.generateVCard());
+        }
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => this.downloadVCard());
+        }
+        if (photoInput) {
+            photoInput.addEventListener('change', (e) => this.handlePhotoUpload(e));
+        }
+        if (logoInput) {
+            logoInput.addEventListener('change', (e) => this.handleLogoUpload(e));
+        }
     }
 
     async generateVCard() {
@@ -31,24 +39,42 @@ class VCardApp {
             const vcard = this.vcardGenerator.generate(formData);
             
             // Update preview
-            document.getElementById('previewName').textContent = formData.name || 'Your Name';
-            document.getElementById('previewTitle').textContent = formData.title || 'Your Title';
-            document.getElementById('previewEmail').textContent = formData.email || 'email@example.com';
-            document.getElementById('previewPhone').textContent = formData.phone || '+1 (555) 123-4567';
-            document.getElementById('previewCompany').textContent = formData.company || 'Company Name';
+            this.updatePreview(formData);
 
             // Generate QR code
             const qrCodeElement = document.getElementById('qrcode');
-            qrCodeElement.innerHTML = ''; // Clear previous QR code
-            this.qrCodeGenerator.generateQRCode(vcard, qrCodeElement);
+            if (qrCodeElement) {
+                qrCodeElement.innerHTML = ''; // Clear previous QR code
+                this.qrCodeGenerator.generateQRCode(vcard, qrCodeElement);
+            }
 
             // Enable download button
-            document.getElementById('downloadBtn').disabled = false;
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) {
+                downloadBtn.disabled = false;
+            }
             this.currentVCard = vcard;
         } catch (error) {
             console.error('Error generating vCard:', error);
-            alert('Error generating vCard. Please try again.');
+            alert(error.message || 'Error generating vCard. Please try again.');
         }
+    }
+
+    updatePreview(formData) {
+        const elements = {
+            previewName: formData.name || 'Your Name',
+            previewTitle: formData.title || 'Your Title',
+            previewEmail: formData.email || 'email@example.com',
+            previewPhone: formData.phone || '+1 (555) 123-4567',
+            previewCompany: formData.company || 'Company Name'
+        };
+
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        });
     }
 
     downloadVCard() {
@@ -79,7 +105,10 @@ class VCardApp {
             if (!file) return;
 
             const imageUrl = await this.fileHandler.handlePhotoFile(file);
-            document.getElementById('previewImage').src = imageUrl;
+            const previewImage = document.getElementById('previewImage');
+            if (previewImage) {
+                previewImage.src = imageUrl;
+            }
         } catch (error) {
             console.error('Error handling photo upload:', error);
             alert('Error uploading photo. Please try again.');
@@ -92,7 +121,10 @@ class VCardApp {
             if (!file) return;
 
             const imageUrl = await this.fileHandler.handleLogoFile(file);
-            document.getElementById('previewLogo').src = imageUrl;
+            const previewLogo = document.getElementById('previewLogo');
+            if (previewLogo) {
+                previewLogo.src = imageUrl;
+            }
         } catch (error) {
             console.error('Error handling logo upload:', error);
             alert('Error uploading logo. Please try again.');
