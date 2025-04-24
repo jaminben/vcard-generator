@@ -1,60 +1,68 @@
 # Olark VCard Generator
 
-A web application that generates vCard files with QR codes for easy contact sharing.
+A simple web application to generate VCard files from Olark contact information.
 
 ## Features
 
-- Generate vCard files with contact information
-- Add profile photos and company logos
-- Generate QR codes for easy sharing
-- Download vCard files
-- Responsive design
-- Form validation
-- Image preview
-- Error handling
+- Generate VCard files from Olark contact data
+- Support for multiple contact fields
+- QR code generation for easy contact sharing
+- Responsive design for mobile and desktop
 
-## Installation
+## Development
 
-1. Clone the repository:
+### Prerequisites
+
+- Node.js (version specified in .nvmrc)
+- npm
+
+### Shell Script Helpers
+
+The project includes two shell scripts to help manage Node.js versions:
+
+1. `ensure-nvm.sh`: Ensures nvm (Node Version Manager) is loaded and the correct Node.js version is being used
+   ```bash
+   source ./ensure-nvm.sh
+   ```
+
+2. `use-nvm`: A wrapper script for easier usage of nvm
+   ```bash
+   ./use-nvm
+   ```
+
+### Basic Commands
+
 ```bash
-git clone https://github.com/yourusername/olark-vcard-generator.git
-cd olark-vcard-generator
-```
-
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Build the project
+npm run build
+
+# Start development server
+npm run dev
 ```
 
-3. Start the development server:
-```bash
-npm start
-```
+## Project Structure
 
-## Usage
+- `src/`: Source code
+  - `js/`: JavaScript modules
+  - `css/`: Stylesheets
+  - `html/`: HTML templates
+- `public/`: Built files
+- `tests/`: Test files
+- `scripts/`: Build and utility scripts
 
-1. Open the application in your web browser
-2. Fill in the contact information form
-3. Upload a profile photo and company logo (optional)
-4. Click "Generate VCard" to create the vCard
-5. Click "Download VCard" to save the vCard file
+## Testing
 
-## Technologies Used
-
-- HTML5
-- CSS3
-- JavaScript (ES6+)
-- QRCode.js
-- Jest (for testing)
+The project uses Vitest for testing. Tests are located in the `tests/` directory.
 
 ## License
 
-MIT
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request 
+MIT License - see LICENSE file for details 

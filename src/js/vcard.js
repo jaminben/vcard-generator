@@ -9,47 +9,50 @@ document.body.innerHTML = `
       <label for="firstName" class="block text-sm font-medium text-gray-900 mb-1">First Name <span class="text-red-600" aria-hidden="true">*</span></label>
       <input type="text" id="firstName" name="firstName" placeholder="First Name" required
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true">
+        aria-required="true" aria-label="First Name">
     </div>
     <div>
       <label for="lastName" class="block text-sm font-medium text-gray-900 mb-1">Last Name <span class="text-red-600" aria-hidden="true">*</span></label>
       <input type="text" id="lastName" name="lastName" placeholder="Last Name" required
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true">
+        aria-required="true" aria-label="Last Name">
     </div>
     <div>
       <label for="phone" class="block text-sm font-medium text-gray-900 mb-1">Phone Number <span class="text-red-600" aria-hidden="true">*</span></label>
       <input type="tel" id="phone" name="phone" placeholder="Phone Number" required
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true" pattern="[0-9+\s\(\)\-]{10,}">
-      <p class="text-sm text-gray-600 mt-1">Format: +1 (555) 555-5555</p>
+        aria-required="true" pattern="[0-9+\s\(\)\-]{10,}" aria-label="Phone Number">
+      <p class="text-sm text-gray-600 mt-1" id="phone-format">Format: +1 (555) 555-5555</p>
     </div>
     <div>
       <label for="whatsapp" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Number</label>
       <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp Number"
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        pattern="[0-9+\s\(\)\-]{10,}">
+        pattern="[0-9+\s\(\)\-]{10,}" aria-label="WhatsApp Number">
     </div>
     <div>
       <label for="email" class="block text-sm font-medium text-gray-900 mb-1">Email Address <span class="text-red-600" aria-hidden="true">*</span></label>
       <input type="email" id="email" name="email" placeholder="Email Address" required
         class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true">
+        aria-required="true" aria-label="Email Address">
     </div>
     <div>
       <label for="website" class="block text-sm font-medium text-gray-900 mb-1">Website</label>
       <input type="url" id="website" name="website" placeholder="Website"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+        aria-label="Website">
     </div>
     <div>
       <label for="company" class="block text-sm font-medium text-gray-900 mb-1">Company</label>
       <input type="text" id="company" name="company" placeholder="Company"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+        aria-label="Company">
     </div>
     <div>
       <label for="jobTitle" class="block text-sm font-medium text-gray-900 mb-1">Job Title</label>
       <input type="text" id="jobTitle" name="jobTitle" placeholder="Job Title"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+        aria-label="Job Title">
     </div>
   </div>
 
@@ -91,12 +94,14 @@ document.body.innerHTML = `
       <div>
         <label for="whatsappMessage" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Message</label>
         <input type="text" id="whatsappMessage" name="whatsappMessage" placeholder="Enter WhatsApp message template"
-          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+          aria-label="WhatsApp Message Template">
       </div>
       <div>
         <label for="smsMessage" class="block text-sm font-medium text-gray-900 mb-1">SMS Message</label>
         <input type="text" id="smsMessage" name="smsMessage" placeholder="Enter SMS message template"
-          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+          aria-label="SMS Message Template">
       </div>
     </div>
   </div>

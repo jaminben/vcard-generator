@@ -84,4 +84,79 @@ describe('VCardGenerator', () => {
     expect(vcard).not.toContain('TITLE:');
     expect(vcard).not.toContain('PHOTO;ENCODING=b;TYPE=JPEG:');
   });
+
+  test('validates required fields', () => {
+    const contact = {
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: ''
+    };
+
+    expect(() => vcardGenerator.generateVCard(contact)).toThrow('Required fields (firstName, lastName, phone, email) are missing');
+  });
+
+  test('sanitizes input fields', () => {
+    const contact = {
+      firstName: 'John;Doe',
+      lastName: 'Doe,John',
+      phone: '+1 (555) 555-5555',
+      email: 'john@example.com',
+      whatsapp: '+1 (555) 555-5556',
+      website: 'https://example.com',
+      company: 'Example;Corp',
+      jobTitle: 'Developer,Senior',
+      photo: 'data:image/jpeg;base64,test'
+    };
+
+    const vcard = vcardGenerator.generateVCard(contact);
+    
+    expect(vcard).toContain('FN:JohnDoe DoeJohn');
+    expect(vcard).toContain('N:DoeJohn;JohnDoe;;;');
+    expect(vcard).toContain('TEL;TYPE=CELL:+1 (555) 555-5555');
+    expect(vcard).toContain('EMAIL:john@example.com');
+    expect(vcard).toContain('TEL;TYPE=WHATSAPP:+1 (555) 555-5556');
+    expect(vcard).toContain('URL:https://example.com');
+    expect(vcard).toContain('ORG:ExampleCorp');
+    expect(vcard).toContain('TITLE:DeveloperSenior');
+  });
+
+  test('validates email format', () => {
+    const contact = {
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '+1 (555) 555-5555',
+      email: 'invalid-email'
+    };
+
+    expect(() => vcardGenerator.generateVCard(contact)).toThrow('Invalid email format');
+  });
+
+  test('validates URL format', () => {
+    const contact = {
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '+1 (555) 555-5555',
+      email: 'john@example.com',
+      website: 'invalid-url'
+    };
+
+    expect(() => vcardGenerator.generateVCard(contact)).toThrow('Invalid URL format');
+  });
+
+  test('validates photo format', () => {
+    const contact = {
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '+1 (555) 555-5555',
+      email: 'john@example.com',
+      photo: 'invalid-photo'
+    };
+
+    expect(() => vcardGenerator.generateVCard(contact)).toThrow('Invalid photo format');
+  });
+
+  test('validates download data', () => {
+    expect(() => vcardGenerator.downloadVCard('test.vcf', '')).toThrow('No vCard data provided');
+  });
 }); 

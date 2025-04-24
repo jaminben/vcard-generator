@@ -23,11 +23,15 @@ export class FormHandler {
     const smsMessage = document.getElementById('smsMessage');
     
     if (whatsappMessage) {
-      whatsappMessage.value = `Hi ${firstName}, I'd like to connect with you on WhatsApp.`;
+      whatsappMessage.value = firstName ? 
+        `Hi ${firstName}, I'd like to connect with you on WhatsApp.` :
+        'hi from me on whatsapp';
     }
     
     if (smsMessage) {
-      smsMessage.value = `Hi ${firstName}, I'd like to connect with you.`;
+      smsMessage.value = firstName ? 
+        `Hi ${firstName}, I'd like to connect with you.` :
+        'hi from me on sms';
     }
   }
 
@@ -75,6 +79,19 @@ export class FormHandler {
     if (element) {
       element.textContent = message;
       element.className = 'text-green-500';
+    }
+  }
+
+  static setupPhoneInputs() {
+    const phoneInput = document.getElementById('phone');
+    const whatsappInput = document.getElementById('whatsapp');
+    
+    if (phoneInput) {
+      phoneInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
+    }
+    
+    if (whatsappInput) {
+      whatsappInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
     }
   }
 } 

@@ -39,7 +39,8 @@ export class FileHandler {
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
           
-          const base64 = canvas.toDataURL('image/jpeg', 0.8);
+          // Get the base64 data without the data URL prefix
+          const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
           resolve(base64);
         };
         img.src = e.target.result;

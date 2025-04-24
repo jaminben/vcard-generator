@@ -68,6 +68,35 @@ describe('FormHandler', () => {
     expect(document.getElementById('smsMessage').value).toBe('Hi John, I\'d like to connect with you.');
   });
 
+  it('updates message templates with default name', () => {
+    FormHandler.updateMessageTemplates('');
+    expect(document.getElementById('whatsappMessage').value).toBe('hi from me on whatsapp');
+    expect(document.getElementById('smsMessage').value).toBe('hi from me on sms');
+  });
+
+  it('validates phone number pattern', () => {
+    const phoneInput = document.getElementById('phone');
+    const whatsappInput = document.getElementById('whatsapp');
+    
+    // Setup phone input patterns
+    FormHandler.setupPhoneInputs();
+    
+    // Valid phone numbers
+    expect(phoneInput.pattern).toBe('[0-9+\\s\\(\\)\\-]{10,}');
+    expect(whatsappInput.pattern).toBe('[0-9+\\s\\(\\)\\-]{10,}');
+    
+    // Test valid patterns
+    expect(phoneInput.checkValidity()).toBe(true);
+    expect(whatsappInput.checkValidity()).toBe(true);
+    
+    // Test invalid patterns
+    phoneInput.value = '123'; // Too short
+    expect(phoneInput.checkValidity()).toBe(false);
+    
+    whatsappInput.value = 'abc'; // Invalid characters
+    expect(whatsappInput.checkValidity()).toBe(false);
+  });
+
   it('saves form values to localStorage', () => {
     document.getElementById('firstName').value = 'John';
     document.getElementById('lastName').value = 'Doe';

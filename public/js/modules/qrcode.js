@@ -11,7 +11,8 @@ export class QRCodeGenerator {
     try {
       const qrcodeDiv = document.getElementById(elementId);
       if (!qrcodeDiv) {
-        throw new Error(`Element with id ${elementId} not found`);
+        console.error('Error generating QR code:', new Error(`Element with id ${elementId} not found`));
+        return;
       }
       
       qrcodeDiv.innerHTML = '';
@@ -92,10 +93,13 @@ export class QRCodeGenerator {
       setTimeout(checkQRCode, 500); // Give more initial time for QR code to render
     } catch (error) {
       console.error('Error generating QR code:', error);
-      document.getElementById(elementId).innerHTML = `
-        <p class="text-red-500">Error generating QR code: ${error.message}</p>
-        <p class="text-sm text-gray-500">Try reducing the amount of data in the vCard</p>
-      `;
+      const qrcodeDiv = document.getElementById(elementId);
+      if (qrcodeDiv) {
+        qrcodeDiv.innerHTML = `
+          <p class="text-red-500">Error generating QR code: ${error.message}</p>
+          <p class="text-sm text-gray-500">Try reducing the amount of data in the vCard</p>
+        `;
+      }
     }
   }
 
