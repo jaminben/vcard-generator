@@ -1,0 +1,40 @@
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(__dirname, '..');
+
+// Get the last commit message
+const lastCommitMessage = execSync('git log -1 --pretty=%B').toString().trim();
+const timestamp = new Date().toISOString();
+
+// Create public directory if it doesn't exist
+const publicDir = path.join(rootDir, 'public');
+if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+}
+
+// Copy all files from src to public
+execSync('cp -r src/* public/');
+
+// Read the index.html file
+const indexPath = path.join(publicDir, 'index.html');
+let html = fs.readFileSync(indexPath, 'utf8');
+
+// Add footer with timestamp and commit message
+const footer = `
+    <footer class="text-center text-sm text-gray-500 mt-8 py-4">
+        <p>Last updated: ${timestamp}</p>
+        <p>Last commit: ${lastCommitMessage}</p>
+    </footer>
+`;
+
+// Insert footer before the closing body tag
+html = html.replace('</body>', `${footer}</body>`);
+
+// Write the modified file back
+fs.writeFileSync(indexPath, html);
+
+console.log('Build completed successfully!'); 

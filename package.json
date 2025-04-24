@@ -6,7 +6,7 @@
   "type": "module",
   "homepage": "https://jaminben.github.io/vcard-generator/",
   "scripts": {
-    "build": "mkdir -p public && cp -r src/* public/",
+    "build": "node scripts/build.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "dev": "npm run build && npx serve public"
   },
