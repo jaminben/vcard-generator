@@ -15,6 +15,14 @@ export class FormHandler {
     const formatted = this.formatPhoneNumber(value);
     if (formatted !== value) {
       input.value = formatted;
+      // Announce the formatted number to screen readers
+      const announcement = document.createElement('div');
+      announcement.setAttribute('role', 'status');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.className = 'sr-only';
+      announcement.textContent = `Phone number formatted as: ${formatted}`;
+      document.body.appendChild(announcement);
+      setTimeout(() => announcement.remove(), 1000);
     }
   }
 
@@ -26,12 +34,14 @@ export class FormHandler {
       whatsappMessage.value = firstName ? 
         `Hi ${firstName}, I'd like to connect with you on WhatsApp.` :
         'hi from me on whatsapp';
+      whatsappMessage.setAttribute('aria-label', `WhatsApp message template: ${whatsappMessage.value}`);
     }
     
     if (smsMessage) {
       smsMessage.value = firstName ? 
         `Hi ${firstName}, I'd like to connect with you.` :
         'hi from me on sms';
+      smsMessage.setAttribute('aria-label', `SMS message template: ${smsMessage.value}`);
     }
   }
 
@@ -70,7 +80,9 @@ export class FormHandler {
     const element = document.getElementById(elementId);
     if (element) {
       element.textContent = message;
-      element.className = 'text-red-500';
+      element.className = 'text-red-700 font-medium mt-2';
+      element.setAttribute('role', 'alert');
+      element.setAttribute('aria-live', 'assertive');
     }
   }
 
@@ -78,8 +90,62 @@ export class FormHandler {
     const element = document.getElementById(elementId);
     if (element) {
       element.textContent = message;
-      element.className = 'text-green-500';
+      element.className = 'text-green-700 font-medium mt-2';
+      element.setAttribute('role', 'status');
+      element.setAttribute('aria-live', 'polite');
     }
+  }
+
+  static validateForm() {
+    const requiredFields = ['firstName', 'lastName', 'phone', 'email'];
+    let isValid = true;
+    let firstError = null;
+
+    // Clear previous error messages
+    document.querySelectorAll('[role="alert"]').forEach(el => {
+      el.textContent = '';
+      el.removeAttribute('role');
+      el.removeAttribute('aria-live');
+    });
+
+    // Validate each required field
+    requiredFields.forEach(field => {
+      const input = document.getElementById(field);
+      const errorId = `${field}-error`;
+      let errorDiv = document.getElementById(errorId);
+      
+      if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.id = errorId;
+        input.parentNode.appendChild(errorDiv);
+      }
+
+      if (!input.value.trim()) {
+        this.showError(errorId, `${input.labels[0].textContent.replace('*', '').trim()} is required`);
+        isValid = false;
+        if (!firstError) firstError = input;
+      } else if (input.validity && !input.validity.valid) {
+        let message = '';
+        if (input.type === 'email' && !input.validity.valid) {
+          message = 'Please enter a valid email address (e.g., name@example.com)';
+        } else if (input.type === 'tel' && !input.validity.valid) {
+          message = 'Please enter a valid phone number with country code (e.g., +1 (555) 555-5555)';
+        } else {
+          message = input.validationMessage;
+        }
+        this.showError(errorId, message);
+        isValid = false;
+        if (!firstError) firstError = input;
+      }
+    });
+
+    // Focus the first error field
+    if (firstError) {
+      firstError.focus();
+      firstError.setAttribute('aria-invalid', 'true');
+    }
+
+    return isValid;
   }
 
   static setupPhoneInputs() {
@@ -88,10 +154,18 @@ export class FormHandler {
     
     if (phoneInput) {
       phoneInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
+      phoneInput.setAttribute('aria-invalid', 'false');
+      phoneInput.addEventListener('input', () => {
+        phoneInput.setAttribute('aria-invalid', !phoneInput.validity.valid);
+      });
     }
     
     if (whatsappInput) {
       whatsappInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
+      whatsappInput.setAttribute('aria-invalid', 'false');
+      whatsappInput.addEventListener('input', () => {
+        whatsappInput.setAttribute('aria-invalid', !whatsappInput.validity.valid);
+      });
     }
   }
 } 

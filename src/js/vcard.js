@@ -2,64 +2,72 @@ document.body.innerHTML = `
 <div class="max-w-4xl mx-auto p-6" role="main">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:p-4 focus:z-50">Skip to main content</a>
   
-  <h1 class="text-3xl font-bold text-gray-900 mb-8">Olark vCard Generator</h1>
+  <h1 class="text-3xl font-bold text-gray-900 mb-8" tabindex="-1">Olark vCard Generator</h1>
   
   <div id="main-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <div>
-      <label for="firstName" class="block text-sm font-medium text-gray-900 mb-1">First Name <span class="text-red-600" aria-hidden="true">*</span></label>
-      <input type="text" id="firstName" name="firstName" placeholder="First Name" required
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true" aria-label="First Name">
+      <label for="firstName" class="block text-sm font-medium text-gray-900 mb-1">First Name <span class="text-red-700" aria-label="required">*</span></label>
+      <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-required="true" aria-describedby="firstName-help">
+      <p id="firstName-help" class="text-sm text-gray-700 mt-1">Enter your legal first name</p>
     </div>
     <div>
-      <label for="lastName" class="block text-sm font-medium text-gray-900 mb-1">Last Name <span class="text-red-600" aria-hidden="true">*</span></label>
-      <input type="text" id="lastName" name="lastName" placeholder="Last Name" required
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true" aria-label="Last Name">
+      <label for="lastName" class="block text-sm font-medium text-gray-900 mb-1">Last Name <span class="text-red-700" aria-label="required">*</span></label>
+      <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-required="true" aria-describedby="lastName-help">
+      <p id="lastName-help" class="text-sm text-gray-700 mt-1">Enter your legal last name</p>
     </div>
     <div>
-      <label for="phone" class="block text-sm font-medium text-gray-900 mb-1">Phone Number <span class="text-red-600" aria-hidden="true">*</span></label>
-      <input type="tel" id="phone" name="phone" placeholder="Phone Number" required
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true" pattern="[0-9+\s\(\)\-]{10,}" aria-label="Phone Number">
-      <p class="text-sm text-gray-600 mt-1" id="phone-format">Format: +1 (555) 555-5555</p>
+      <label for="phone" class="block text-sm font-medium text-gray-900 mb-1">Phone Number <span class="text-red-700" aria-label="required">*</span></label>
+      <input type="tel" id="phone" name="phone" placeholder="+1 (555) 555-5555" required
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-required="true" pattern="[0-9+\\s\\(\\)\\-]{10,}" aria-describedby="phone-format">
+      <p id="phone-format" class="text-sm text-gray-700 mt-1">Format: +1 (555) 555-5555 - Include country code and area code</p>
     </div>
     <div>
       <label for="whatsapp" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Number</label>
-      <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp Number"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        pattern="[0-9+\s\(\)\-]{10,}" aria-label="WhatsApp Number">
+      <input type="tel" id="whatsapp" name="whatsapp" placeholder="+1 (555) 555-5555"
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        pattern="[0-9+\\s\\(\\)\\-]{10,}" aria-describedby="whatsapp-format">
+      <p id="whatsapp-format" class="text-sm text-gray-700 mt-1">Optional - Use the same format as phone number</p>
     </div>
     <div>
-      <label for="email" class="block text-sm font-medium text-gray-900 mb-1">Email Address <span class="text-red-600" aria-hidden="true">*</span></label>
-      <input type="email" id="email" name="email" placeholder="Email Address" required
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-required="true" aria-label="Email Address">
+      <label for="email" class="block text-sm font-medium text-gray-900 mb-1">Email Address <span class="text-red-700" aria-label="required">*</span></label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-required="true" aria-describedby="email-help">
+      <p id="email-help" class="text-sm text-gray-700 mt-1">Enter a valid email address</p>
     </div>
     <div>
       <label for="website" class="block text-sm font-medium text-gray-900 mb-1">Website</label>
-      <input type="url" id="website" name="website" placeholder="Website"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-label="Website">
+      <input type="url" id="website" name="website" placeholder="https://example.com"
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-describedby="website-help">
+      <p id="website-help" class="text-sm text-gray-700 mt-1">Optional - Include https:// or http://</p>
     </div>
     <div>
       <label for="company" class="block text-sm font-medium text-gray-900 mb-1">Company</label>
-      <input type="text" id="company" name="company" placeholder="Company"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-label="Company">
+      <input type="text" id="company" name="company" placeholder="Enter company name"
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-describedby="company-help">
+      <p id="company-help" class="text-sm text-gray-700 mt-1">Optional - Enter your company or organization</p>
     </div>
     <div>
       <label for="jobTitle" class="block text-sm font-medium text-gray-900 mb-1">Job Title</label>
-      <input type="text" id="jobTitle" name="jobTitle" placeholder="Job Title"
-        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-        aria-label="Job Title">
+      <input type="text" id="jobTitle" name="jobTitle" placeholder="Enter job title"
+        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+        aria-describedby="jobTitle-help">
+      <p id="jobTitle-help" class="text-sm text-gray-700 mt-1">Optional - Enter your role or position</p>
     </div>
   </div>
 
-  <div class="mb-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Profile Photo</h2>
+  <div class="mb-6" role="region" aria-labelledby="photo-section">
+    <h2 id="photo-section" class="text-lg font-medium text-gray-900 mb-4">Profile Photo</h2>
     <div id="photoDrop" role="region" aria-label="Photo upload area" tabindex="0"
-      class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+      class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+      aria-describedby="photo-help">
       <div id="photoPreview" class="hidden mb-4">
         <img id="previewImage" class="mx-auto max-h-48 rounded-lg shadow-md" src="" alt="Profile photo preview">
       </div>
@@ -69,13 +77,15 @@ document.body.innerHTML = `
       <input type="file" id="photoInput" name="photo" accept="image/*" 
         class="block mx-auto" aria-label="Choose photo file">
     </div>
+    <p id="photo-help" class="text-sm text-gray-700 mt-2">Accepted formats: JPG, PNG, GIF. Maximum size: 5MB</p>
     <div id="photoFeedback" class="mt-2 text-sm" role="status" aria-live="polite"></div>
   </div>
 
-  <div class="mb-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">QR Code Logo</h2>
+  <div class="mb-6" role="region" aria-labelledby="logo-section">
+    <h2 id="logo-section" class="text-lg font-medium text-gray-900 mb-4">QR Code Logo</h2>
     <div id="logoDrop" role="region" aria-label="Logo upload area" tabindex="0"
-      class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+      class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+      aria-describedby="logo-help">
       <div id="logoPreview" class="hidden mb-4">
         <img id="previewLogo" class="mx-auto max-h-48 rounded-lg shadow-md" src="" alt="QR code logo preview">
       </div>
@@ -85,29 +95,32 @@ document.body.innerHTML = `
       <input type="file" id="logoInput" name="logo" accept="image/*" 
         class="block mx-auto" aria-label="Choose logo file">
     </div>
+    <p id="logo-help" class="text-sm text-gray-700 mt-2">For best results, use a square logo with transparent background</p>
     <div id="logoFeedback" class="mt-2 text-sm" role="status" aria-live="polite"></div>
   </div>
 
-  <div class="mb-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Message Templates</h2>
+  <div class="mb-6" role="region" aria-labelledby="message-section">
+    <h2 id="message-section" class="text-lg font-medium text-gray-900 mb-4">Message Templates</h2>
     <div class="space-y-4">
       <div>
         <label for="whatsappMessage" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Message</label>
-        <input type="text" id="whatsappMessage" name="whatsappMessage" placeholder="Enter WhatsApp message template"
-          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-          aria-label="WhatsApp Message Template">
+        <input type="text" id="whatsappMessage" name="whatsappMessage" placeholder="Hi, I'd like to connect with you on WhatsApp"
+          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+          aria-describedby="whatsapp-msg-help">
+        <p id="whatsapp-msg-help" class="text-sm text-gray-700 mt-1">Message to include with your WhatsApp QR code</p>
       </div>
       <div>
         <label for="smsMessage" class="block text-sm font-medium text-gray-900 mb-1">SMS Message</label>
-        <input type="text" id="smsMessage" name="smsMessage" placeholder="Enter SMS message template"
-          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
-          aria-label="SMS Message Template">
+        <input type="text" id="smsMessage" name="smsMessage" placeholder="Hi, I'd like to connect with you"
+          class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+          aria-describedby="sms-msg-help">
+        <p id="sms-msg-help" class="text-sm text-gray-700 mt-1">Message to include with your SMS QR code</p>
       </div>
     </div>
   </div>
 
   <button id="generateBtn" type="button"
-    class="w-full bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors"
+    class="w-full bg-blue-800 text-white py-3 px-4 rounded-md hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-offset-2 transition-colors text-lg font-medium"
     aria-label="Generate vCard and QR codes">
     Generate vCard
   </button>
@@ -115,18 +128,18 @@ document.body.innerHTML = `
   <div id="downloadLink" class="mt-4" role="region" aria-label="Download options"></div>
   
   <div class="mt-8 space-y-8">
-    <section>
-      <h2 class="text-lg font-medium text-gray-900 mb-4">vCard QR Code</h2>
+    <section aria-labelledby="vcard-qr-heading">
+      <h2 id="vcard-qr-heading" class="text-lg font-medium text-gray-900 mb-4">vCard QR Code</h2>
       <div id="qrcode" class="flex justify-center" role="img" aria-label="vCard QR code"></div>
     </section>
 
-    <section>
-      <h2 class="text-lg font-medium text-gray-900 mb-4">WhatsApp QR Code</h2>
+    <section aria-labelledby="whatsapp-qr-heading">
+      <h2 id="whatsapp-qr-heading" class="text-lg font-medium text-gray-900 mb-4">WhatsApp QR Code</h2>
       <div id="whatsappQrcode" class="flex justify-center" role="img" aria-label="WhatsApp QR code"></div>
     </section>
 
-    <section>
-      <h2 class="text-lg font-medium text-gray-900 mb-1">SMS QR Code</h2>
+    <section aria-labelledby="sms-qr-heading">
+      <h2 id="sms-qr-heading" class="text-lg font-medium text-gray-900 mb-4">SMS QR Code</h2>
       <div id="smsQrcode" class="flex justify-center" role="img" aria-label="SMS QR code"></div>
     </section>
   </div>
