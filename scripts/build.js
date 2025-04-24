@@ -10,17 +10,31 @@ const rootDir = path.resolve(__dirname, '..');
 const lastCommitMessage = execSync('git log -1 --pretty=%B').toString().trim();
 const timestamp = new Date().toISOString();
 
+console.log('Starting build process...');
+console.log('Root directory:', rootDir);
+
 // Create public directory if it doesn't exist
 const publicDir = path.join(rootDir, 'public');
 if (!fs.existsSync(publicDir)) {
+    console.log('Creating public directory...');
     fs.mkdirSync(publicDir, { recursive: true });
 }
 
+// Clean the public directory first
+console.log('Cleaning public directory...');
+execSync('rm -rf public/*');
+
 // Copy all files from src to public
+console.log('Copying files from src to public...');
 execSync('cp -r src/* public/');
+
+// Verify the files were copied
+console.log('Verifying copied files...');
+execSync('ls -la public/');
 
 // Read the index.html file
 const indexPath = path.join(publicDir, 'index.html');
+console.log('Reading index.html from:', indexPath);
 let html = fs.readFileSync(indexPath, 'utf8');
 
 // Add footer with timestamp and commit message
@@ -35,6 +49,9 @@ const footer = `
 html = html.replace('</body>', `${footer}</body>`);
 
 // Write the modified file back
+console.log('Writing updated index.html...');
 fs.writeFileSync(indexPath, html);
 
-console.log('Build completed successfully!'); 
+console.log('Build completed successfully!');
+console.log('Final public directory contents:');
+execSync('ls -la public/'); 
