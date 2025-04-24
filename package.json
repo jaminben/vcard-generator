@@ -1,0 +1,14 @@
+{
+  "name": "olark-vcard-generator",
+  "version": "1.0.0",
+  "description": "A VCard generator for Olark contacts",
+  "main": "src/js/vcard.js",
+  "scripts": {
+    "build": "cp -r src/* public/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
+} 
