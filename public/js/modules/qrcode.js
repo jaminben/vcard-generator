@@ -42,6 +42,7 @@ export class QRCodeGenerator {
       container.appendChild(finalCanvas);
 
       const ctx = finalCanvas.getContext('2d');
+      console.log(qrCanvas, ctx)
       ctx.drawImage(qrCanvas, 0, 0);
 
       if (this.logoData) {
