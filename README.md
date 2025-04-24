@@ -1,50 +1,60 @@
 # Olark VCard Generator
 
-A web application for generating vCards from Olark contact information.
+A web application that generates vCard files with QR codes for easy contact sharing.
 
 ## Features
 
-- Generate vCards from contact information
-- Preview vCard content before download
-- Responsive design for all devices
-- Easy deployment to GitHub Pages
+- Generate vCard files with contact information
+- Add profile photos and company logos
+- Generate QR codes for easy sharing
+- Download vCard files
+- Responsive design
+- Form validation
+- Image preview
+- Error handling
 
-## Development
+## Installation
 
-1. Clone the repository
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/olark-vcard-generator.git
+cd olark-vcard-generator
+```
+
 2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start development server:
-   ```bash
-   npm run dev
-   ```
-4. Build for production:
-   ```bash
-   npm run build
-   ```
-
-## Deployment
-
-The application is automatically deployed to GitHub Pages when changes are pushed to the `main` branch. The deployment process:
-
-1. Builds the application
-2. Deploys to GitHub Pages
-3. Updates the site at `https://[username].github.io/olark-vcard-generator`
-
-## Project Structure
-
+```bash
+npm install
 ```
-.
-├── public/          # Static files and build output
-├── src/            # Source files
-│   ├── css/        # Stylesheets
-│   └── js/         # JavaScript files
-├── .github/        # GitHub configuration
-└── package.json    # Project configuration
+
+3. Start the development server:
+```bash
+npm start
 ```
+
+## Usage
+
+1. Open the application in your web browser
+2. Fill in the contact information form
+3. Upload a profile photo and company logo (optional)
+4. Click "Generate VCard" to create the vCard
+5. Click "Download VCard" to save the vCard file
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- QRCode.js
+- Jest (for testing)
 
 ## License
 
-MIT 
+MIT
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request 

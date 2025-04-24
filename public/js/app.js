@@ -118,4 +118,55 @@ class VCardApp {
 // Initialize the application when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   new VCardApp();
-}); 
+});
+
+// Default images
+const DEFAULT_PROFILE_IMAGE = 'images/default-profile.png';
+const DEFAULT_LOGO_IMAGE = 'images/default-logo.png';
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBub3QgYXZhaWxhYmxlPC90ZXh0Pjwvc3ZnPg==';
+
+// Load default images
+const defaultProfileImage = new Image();
+defaultProfileImage.onerror = () => {
+    console.error('Failed to load default profile image');
+    defaultProfileImage.src = PLACEHOLDER_IMAGE;
+};
+defaultProfileImage.src = DEFAULT_PROFILE_IMAGE;
+
+const defaultLogoImage = new Image();
+defaultLogoImage.onerror = () => {
+    console.error('Failed to load default logo image');
+    defaultLogoImage.src = PLACEHOLDER_IMAGE;
+};
+defaultLogoImage.src = DEFAULT_LOGO_IMAGE;
+
+// Update the image preview functions
+function handleImagePreview(input, previewId, feedbackId, defaultImage) {
+    const file = input.files[0];
+    if (!file) {
+        document.getElementById(previewId).classList.add('hidden');
+        document.getElementById(feedbackId).textContent = '';
+        return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+        document.getElementById(feedbackId).textContent = 'Please select an image file';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            document.getElementById(previewId).classList.remove('hidden');
+            document.getElementById(previewId).querySelector('img').src = e.target.result;
+            document.getElementById(feedbackId).textContent = '';
+        };
+        img.onerror = () => {
+            document.getElementById(feedbackId).textContent = 'Failed to load image';
+            document.getElementById(previewId).querySelector('img').src = defaultImage;
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+} 
