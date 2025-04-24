@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 // Mock canvas and other browser APIs
 global.Image = class {
@@ -10,41 +10,72 @@ global.Image = class {
 };
 
 global.URL = {
-  createObjectURL: jest.fn(),
-  revokeObjectURL: jest.fn()
+  createObjectURL: vi.fn(),
+  revokeObjectURL: vi.fn()
 };
 
 global.localStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn()
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn()
 };
+
+// Mock QRCode
+global.QRCode = vi.fn().mockImplementation(() => ({
+  clear: vi.fn(),
+  makeCode: vi.fn()
+}));
 
 // Mock canvas functionality
-const mockCanvas = {
-  getContext: jest.fn(() => ({
-    drawImage: jest.fn(),
-    fillStyle: '',
-    fillRect: jest.fn()
+const mockCanvasContext = {
+  drawImage: vi.fn(),
+  fillStyle: '',
+  fillRect: vi.fn(),
+  clearRect: vi.fn(),
+  getImageData: vi.fn(() => ({
+    data: new Uint8ClampedArray(100),
+    width: 100,
+    height: 100
   })),
-  toDataURL: jest.fn(() => 'data:image/jpeg;base64,mockdata'),
-  width: 0,
-  height: 0
+  putImageData: vi.fn()
 };
 
+const mockCanvas = {
+  getContext: vi.fn(() => mockCanvasContext),
+  toDataURL: vi.fn(() => 'data:image/jpeg;base64,dGVzdGRhdGE='),
+  width: 256,
+  height: 256
+};
+
+// Save original createElement
+const originalCreateElement = document.createElement;
+
 // Mock document functions
-global.document.createElement = jest.fn((tag) => {
-  if (tag === 'canvas') {
+document.createElement = (tag) => {
+  if (tag.toLowerCase() === 'canvas') {
     return mockCanvas;
   }
-  const element = document.createElement(tag);
-  return element;
-});
+  return originalCreateElement.call(document, tag);
+};
 
 // Mock FileReader
-global.FileReader = jest.fn(() => ({
-  readAsDataURL: jest.fn(),
-  onload: null,
-  onerror: null
-})); 
+global.FileReader = class {
+  constructor() {
+    this.readAsDataURL = vi.fn(() => {
+      setTimeout(() => {
+        this.onload && this.onload({ target: { result: 'data:image/jpeg;base64,dGVzdGRhdGE=' } });
+      });
+    });
+  }
+};
+
+// Mock HTMLCanvasElement
+global.HTMLCanvasElement = class {
+  getContext() {
+    return mockCanvasContext;
+  }
+  toDataURL() {
+    return 'data:image/jpeg;base64,dGVzdGRhdGE=';
+  }
+}; 

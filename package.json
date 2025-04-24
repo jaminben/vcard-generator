@@ -7,33 +7,46 @@
   "homepage": "https://jaminben.github.io/vcard-generator/",
   "scripts": {
     "build": "node scripts/build.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "vitest --run",
+    "test:coverage": "vitest run --coverage",
     "dev": "npm run build && npx serve public"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.24.0",
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@vitest/coverage-v8": "^3.1.2",
     "babel-jest": "^29.7.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
+    "jest-canvas-mock": "^2.5.2",
     "jest-environment-jsdom": "^29.7.0",
-    "serve": "^14.2.1"
+    "jsdom": "^26.1.0",
+    "serve": "^14.2.1",
+    "vitest": "^3.1.2"
   },
   "jest": {
+    "setupFiles": [
+      "./test/setup.js"
+    ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
-    "moduleNameMapper": {
-      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
-    },
     "transform": {
       "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!canvas)/"
+    ],
+    "moduleNameMapper": {
+      "^canvas$": "<rootDir>/test/mocks/canvasMock.js"
     },
     "moduleFileExtensions": [
       "js",
       "mjs"
     ],
     "testEnvironmentOptions": {
-      "customExportConditions": ["node", "node-addons"]
+      "customExportConditions": [
+        "node",
+        "node-addons"
+      ]
     }
   }
 }

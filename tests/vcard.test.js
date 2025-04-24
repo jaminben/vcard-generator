@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { VCardGenerator } from '../src/js/modules/vcard.js';
 
 describe('VCardGenerator', () => {
