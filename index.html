@@ -1,15 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>vCard Generator</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olark VCard Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-4">vCard Generator</h1>
-        <p class="mb-4">Your vCard generator is coming soon!</p>
+<body>
+    <div class="container">
+        <header>
+            <img src="images/olark-logo.png" alt="Olark Logo" class="logo">
+            <h1>Olark VCard Generator</h1>
+        </header>
+        <main>
+            <div id="vcardPreview" class="vcard-preview">
+                <!-- VCard preview will be displayed here -->
+            </div>
+            <div class="controls">
+                <button id="generateBtn" class="btn">Generate VCard</button>
+                <button id="downloadBtn" class="btn" disabled>Download VCard</button>
+            </div>
+        </main>
     </div>
-    <script src="vcard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html> 

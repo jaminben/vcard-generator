@@ -610,9 +610,13 @@ function updatePhoneNumber(input, value) {
   const formattedNumber = formatPhoneNumber(value);
   input.value = formattedNumber;
   
-  // If this is the phone input and WhatsApp is empty, mirror to WhatsApp
-  if (input.id === 'phone' && !document.getElementById('whatsapp').value) {
-    document.getElementById('whatsapp').value = formattedNumber;
+  // If this is the phone input and WhatsApp is empty or matches the old phone number, mirror to WhatsApp
+  if (input.id === 'phone') {
+    const whatsappInput = document.getElementById('whatsapp');
+    if (!whatsappInput.value || whatsappInput.value === input.defaultValue) {
+      whatsappInput.value = formattedNumber;
+      whatsappInput.defaultValue = formattedNumber;
+    }
   }
 }
 
@@ -662,6 +666,22 @@ function showSuccess(elementId, message) {
 document.getElementById('photoDrop').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' ') {
     document.getElementById('photoInput').click();
+  }
+});
+
+// Initialize form with default values
+document.addEventListener('DOMContentLoaded', () => {
+  const phoneInput = document.getElementById('phone');
+  const whatsappInput = document.getElementById('whatsapp');
+  
+  // Set default values
+  phoneInput.defaultValue = phoneInput.value;
+  whatsappInput.defaultValue = whatsappInput.value;
+  
+  // If WhatsApp is empty, mirror phone number
+  if (!whatsappInput.value) {
+    whatsappInput.value = phoneInput.value;
+    whatsappInput.defaultValue = phoneInput.value;
   }
 });
 
