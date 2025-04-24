@@ -16,8 +16,8 @@ export class QRCodeGenerator {
       element.innerHTML = '';
       new QRCode(element, {
         text: vcard,
-        width: 200,
-        height: 200,
+        width: 128,
+        height: 128,
         colorDark: '#000000',
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.H
