@@ -10,6 +10,10 @@ export class QRCodeGenerator {
   generateQRCode(elementId, data) {
     try {
       const qrcodeDiv = document.getElementById(elementId);
+      if (!qrcodeDiv) {
+        throw new Error(`Element with id ${elementId} not found`);
+      }
+      
       qrcodeDiv.innerHTML = '';
       
       if (!data) {
@@ -25,6 +29,7 @@ export class QRCodeGenerator {
       tempContainer.style.display = 'none';
       container.appendChild(tempContainer);
 
+      // Create QR code and wait for it to be ready
       const qrCode = new QRCode(tempContainer, {
         text: data,
         width: 256,
@@ -35,10 +40,11 @@ export class QRCodeGenerator {
       });
 
       // Wait for the QR code to be fully rendered
-      setTimeout(() => {
+      const checkQRCode = () => {
         const qrCanvas = tempContainer.querySelector('canvas');
         if (!qrCanvas) {
-          throw new Error('QR code canvas not found');
+          setTimeout(checkQRCode, 100);
+          return;
         }
 
         const finalCanvas = document.createElement('canvas');
@@ -47,6 +53,14 @@ export class QRCodeGenerator {
         container.appendChild(finalCanvas);
 
         const ctx = finalCanvas.getContext('2d');
+        if (!ctx) {
+          throw new Error('Could not get canvas context');
+        }
+
+        // Clear the canvas before drawing
+        ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
+        
+        // Draw the QR code
         ctx.drawImage(qrCanvas, 0, 0);
 
         if (this.logoData) {
@@ -62,13 +76,20 @@ export class QRCodeGenerator {
 
             this._setupDownloadButton(container, finalCanvas, elementId);
           };
+          logo.onerror = () => {
+            console.error('Error loading logo image');
+            this._setupDownloadButton(container, finalCanvas, elementId);
+          };
           logo.src = this.logoData;
         } else {
           this._setupDownloadButton(container, finalCanvas, elementId);
         }
 
         tempContainer.remove();
-      }, 100);
+      };
+
+      // Start checking for QR code readiness
+      checkQRCode();
     } catch (error) {
       console.error('Error generating QR code:', error);
       document.getElementById(elementId).innerHTML = `
