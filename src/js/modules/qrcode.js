@@ -25,7 +25,7 @@ export class QRCodeGenerator {
       tempContainer.style.display = 'none';
       container.appendChild(tempContainer);
 
-      new QRCode(tempContainer, {
+      const qrCode = new QRCode(tempContainer, {
         text: data,
         width: 256,
         height: 256,
@@ -34,34 +34,41 @@ export class QRCodeGenerator {
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      const qrCanvas = tempContainer.querySelector('canvas');
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = 256;
-      finalCanvas.height = 256;
-      container.appendChild(finalCanvas);
+      // Wait for the QR code to be fully rendered
+      setTimeout(() => {
+        const qrCanvas = tempContainer.querySelector('canvas');
+        if (!qrCanvas) {
+          throw new Error('QR code canvas not found');
+        }
 
-      const ctx = finalCanvas.getContext('2d');
-      ctx.drawImage(qrCanvas, 0, 0);
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = 256;
+        finalCanvas.height = 256;
+        container.appendChild(finalCanvas);
 
-      if (this.logoData) {
-        const logo = new Image();
-        logo.onload = () => {
-          const logoSize = 64;
-          const logoX = (256 - logoSize) / 2;
-          const logoY = (256 - logoSize) / 2;
+        const ctx = finalCanvas.getContext('2d');
+        ctx.drawImage(qrCanvas, 0, 0);
 
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4);
-          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+        if (this.logoData) {
+          const logo = new Image();
+          logo.onload = () => {
+            const logoSize = 64;
+            const logoX = (256 - logoSize) / 2;
+            const logoY = (256 - logoSize) / 2;
 
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4);
+            ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+
+            this._setupDownloadButton(container, finalCanvas, elementId);
+          };
+          logo.src = this.logoData;
+        } else {
           this._setupDownloadButton(container, finalCanvas, elementId);
-        };
-        logo.src = this.logoData;
-      } else {
-        this._setupDownloadButton(container, finalCanvas, elementId);
-      }
+        }
 
-      tempContainer.remove();
+        tempContainer.remove();
+      }, 100);
     } catch (error) {
       console.error('Error generating QR code:', error);
       document.getElementById(elementId).innerHTML = `
