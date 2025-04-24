@@ -12,6 +12,8 @@ const timestamp = new Date().toISOString();
 
 console.log('Starting build process...');
 console.log('Root directory:', rootDir);
+console.log('Debug: Checking if src directory exists...');
+console.log('Src directory contents:', execSync('ls -la src/').toString());
 
 // Create public directory if it doesn't exist
 const publicDir = path.join(rootDir, 'public');
