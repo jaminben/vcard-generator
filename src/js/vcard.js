@@ -1,3 +1,5 @@
+import { FormHandler } from './utils/formHandler.js';
+
 document.body.innerHTML = `
 <div class="max-w-4xl mx-auto p-6" role="main">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:p-4 focus:z-50">Skip to main content</a>
@@ -661,22 +663,12 @@ document.getElementById('firstName').addEventListener('input', (e) => {
 
 // Update error messages to be more descriptive
 function showError(elementId, message) {
-  const element = document.getElementById(elementId);
-  element.innerHTML = `
-    <p class="text-red-700" role="alert">
-      <span class="font-medium">Error:</span> ${message}
-    </p>
-  `;
+  FormHandler.showError(elementId, message);
 }
 
 // Update success messages to be more descriptive
 function showSuccess(elementId, message) {
-  const element = document.getElementById(elementId);
-  element.innerHTML = `
-    <p class="text-green-700">
-      <span class="font-medium">Success:</span> ${message}
-    </p>
-  `;
+  FormHandler.showSuccess(elementId, message);
 }
 
 // Add keyboard navigation for photo drop zone

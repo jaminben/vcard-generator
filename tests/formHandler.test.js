@@ -164,7 +164,9 @@ describe('FormHandler', () => {
 
     FormHandler.showError('photoFeedback', 'Error message');
     expect(feedbackDiv.textContent).toBe('Error message');
-    expect(feedbackDiv.className).toBe('text-red-500');
+    expect(feedbackDiv.className).toBe('text-red-700 font-medium mt-2');
+    expect(feedbackDiv.getAttribute('role')).toBe('alert');
+    expect(feedbackDiv.getAttribute('aria-live')).toBe('assertive');
 
     document.body.removeChild(feedbackDiv);
   });
@@ -176,7 +178,9 @@ describe('FormHandler', () => {
 
     FormHandler.showSuccess('logoFeedback', 'Success message');
     expect(feedbackDiv.textContent).toBe('Success message');
-    expect(feedbackDiv.className).toBe('text-green-500');
+    expect(feedbackDiv.className).toBe('text-green-700 font-medium mt-2');
+    expect(feedbackDiv.getAttribute('role')).toBe('status');
+    expect(feedbackDiv.getAttribute('aria-live')).toBe('polite');
 
     document.body.removeChild(feedbackDiv);
   });
