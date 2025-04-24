@@ -1,4 +1,32 @@
 export class VCardGenerator {
+  generate(data) {
+    if (!data) {
+      throw new Error('No data provided for vCard generation');
+    }
+
+    const vcard = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${this.escapeValue(data.name)}`,
+      `TITLE:${this.escapeValue(data.title)}`,
+      `EMAIL:${this.escapeValue(data.email)}`,
+      `TEL:${this.escapeValue(data.phone)}`,
+      `ORG:${this.escapeValue(data.company)}`,
+      'END:VCARD'
+    ].join('\n');
+
+    return vcard;
+  }
+
+  escapeValue(value) {
+    if (!value) return '';
+    return value
+      .replace(/\\/g, '\\\\')
+      .replace(/,/g, '\\,')
+      .replace(/;/g, '\\;')
+      .replace(/\n/g, '\\n');
+  }
+
   generateVCard({ firstName, lastName, phone, email, whatsapp = '', website = '', company = '', jobTitle = '', photo = '' }) {
     const vcard = [
       'BEGIN:VCARD',

@@ -1,3 +1,110 @@
+import { VCardGenerator } from './modules/vcard.js';
+import { QRCodeGenerator } from './modules/qrcode.js';
+import { FileHandler } from './modules/fileHandler.js';
+import { FormHandler } from './modules/formHandler.js';
+
+class VCardApp {
+    constructor() {
+        this.vcardGenerator = new VCardGenerator();
+        this.qrCodeGenerator = new QRCodeGenerator();
+        this.fileHandler = new FileHandler();
+        this.formHandler = new FormHandler();
+        
+        this.initializeEventListeners();
+    }
+
+    initializeEventListeners() {
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const photoInput = document.getElementById('photo');
+        const logoInput = document.getElementById('logo');
+
+        generateBtn.addEventListener('click', () => this.generateVCard());
+        downloadBtn.addEventListener('click', () => this.downloadVCard());
+        photoInput.addEventListener('change', (e) => this.handlePhotoUpload(e));
+        logoInput.addEventListener('change', (e) => this.handleLogoUpload(e));
+    }
+
+    async generateVCard() {
+        try {
+            const formData = this.formHandler.getFormData();
+            const vcard = this.vcardGenerator.generate(formData);
+            
+            // Update preview
+            document.getElementById('previewName').textContent = formData.name || 'Your Name';
+            document.getElementById('previewTitle').textContent = formData.title || 'Your Title';
+            document.getElementById('previewEmail').textContent = formData.email || 'email@example.com';
+            document.getElementById('previewPhone').textContent = formData.phone || '+1 (555) 123-4567';
+            document.getElementById('previewCompany').textContent = formData.company || 'Company Name';
+
+            // Generate QR code
+            const qrCodeElement = document.getElementById('qrcode');
+            qrCodeElement.innerHTML = ''; // Clear previous QR code
+            this.qrCodeGenerator.generateQRCode(vcard, qrCodeElement);
+
+            // Enable download button
+            document.getElementById('downloadBtn').disabled = false;
+            this.currentVCard = vcard;
+        } catch (error) {
+            console.error('Error generating vCard:', error);
+            alert('Error generating vCard. Please try again.');
+        }
+    }
+
+    downloadVCard() {
+        if (!this.currentVCard) {
+            alert('Please generate a vCard first.');
+            return;
+        }
+
+        try {
+            const blob = new Blob([this.currentVCard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contact.vcf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading vCard:', error);
+            alert('Error downloading vCard. Please try again.');
+        }
+    }
+
+    async handlePhotoUpload(event) {
+        try {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const imageUrl = await this.fileHandler.handlePhotoFile(file);
+            document.getElementById('previewImage').src = imageUrl;
+        } catch (error) {
+            console.error('Error handling photo upload:', error);
+            alert('Error uploading photo. Please try again.');
+        }
+    }
+
+    async handleLogoUpload(event) {
+        try {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const imageUrl = await this.fileHandler.handleLogoFile(file);
+            document.getElementById('previewLogo').src = imageUrl;
+        } catch (error) {
+            console.error('Error handling logo upload:', error);
+            alert('Error uploading logo. Please try again.');
+        }
+    }
+}
+
+// Initialize the app when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new VCardApp();
+});
+
 document.body.innerHTML = `
 <div class="max-w-4xl mx-auto p-6" role="main">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:p-4 focus:z-50">Skip to main content</a>

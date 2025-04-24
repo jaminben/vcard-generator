@@ -7,16 +7,26 @@ export class QRCodeGenerator {
     this.logoData = logoData;
   }
 
-  generateQRCode(elementId, data) {
+  generateQRCode(vcard, element) {
     try {
-      const qrcodeDiv = document.getElementById(elementId);
-      qrcodeDiv.innerHTML = '';
-      
-      if (!data) {
-        qrcodeDiv.innerHTML = '<p class="text-red-500">No data provided for QR code</p>';
-        return;
+      if (!element) {
+        throw new Error('QR code element not found');
       }
 
+      // Clear any existing QR code
+      element.innerHTML = '';
+
+      // Create QR code with error correction level H (highest)
+      new QRCode(element, {
+        text: vcard,
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      const qrcodeDiv = document.getElementById(element.id);
       const container = document.createElement('div');
       container.className = 'relative';
       qrcodeDiv.appendChild(container);
@@ -24,15 +34,6 @@ export class QRCodeGenerator {
       const tempContainer = document.createElement('div');
       tempContainer.style.display = 'none';
       container.appendChild(tempContainer);
-
-      new QRCode(tempContainer, {
-        text: data,
-        width: 256,
-        height: 256,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-      });
 
       const qrCanvas = tempContainer.querySelector('canvas');
       const finalCanvas = document.createElement('canvas');
@@ -54,20 +55,18 @@ export class QRCodeGenerator {
           ctx.fillRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4);
           ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
 
-          this._setupDownloadButton(container, finalCanvas, elementId);
+          this._setupDownloadButton(container, finalCanvas, element.id);
         };
         logo.src = this.logoData;
       } else {
-        this._setupDownloadButton(container, finalCanvas, elementId);
+        this._setupDownloadButton(container, finalCanvas, element.id);
       }
 
       tempContainer.remove();
     } catch (error) {
       console.error('Error generating QR code:', error);
-      document.getElementById(elementId).innerHTML = `
-        <p class="text-red-500">Error generating QR code: ${error.message}</p>
-        <p class="text-sm text-gray-500">Try reducing the amount of data in the vCard</p>
-      `;
+      element.innerHTML = '<p class="text-red-500">Error generating QR code</p>';
+      throw error;
     }
   }
 

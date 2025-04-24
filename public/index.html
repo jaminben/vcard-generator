@@ -4,75 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olark VCard Generator</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <img src="./images/olark-logo.png" alt="Olark Logo" class="logo">
-            <h1>Olark VCard Generator</h1>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <img src="images/olark-logo.png" alt="Olark Logo" class="mx-auto h-16 mb-4">
+            <h1 class="text-3xl font-bold text-gray-800">Olark VCard Generator</h1>
         </header>
-        <main>
-            <form id="contactForm">
-                <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" required>
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input type="tel" id="phone" name="phone">
-                </div>
-                <div class="form-group">
-                    <label for="whatsapp">WhatsApp</label>
-                    <input type="tel" id="whatsapp" name="whatsapp">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email">
-                </div>
-                <div class="form-group">
-                    <label for="website">Website</label>
-                    <input type="url" id="website" name="website">
-                </div>
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" id="company" name="company">
-                </div>
-                <div class="form-group">
-                    <label for="jobTitle">Job Title</label>
-                    <input type="text" id="jobTitle" name="jobTitle">
-                </div>
-                <div class="form-group">
-                    <label for="photoInput">Profile Photo</label>
-                    <input type="file" id="photoInput" accept="image/*">
-                    <div id="photoPreview" class="hidden">
-                        <img id="previewImage" src="./images/profile.png" alt="Profile Preview">
+
+        <main class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Preview Section -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-700">Preview</h2>
+                    <div id="preview" class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img id="previewImage" src="images/default-profile.png" alt="Profile" class="w-20 h-20 rounded-full object-cover">
+                            <div>
+                                <h3 id="previewName" class="text-lg font-semibold">Your Name</h3>
+                                <p id="previewTitle" class="text-gray-600">Your Title</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p id="previewEmail" class="text-gray-600">email@example.com</p>
+                            <p id="previewPhone" class="text-gray-600">+1 (555) 123-4567</p>
+                            <p id="previewCompany" class="text-gray-600">Company Name</p>
+                        </div>
+                        <div class="mt-4">
+                            <img id="previewLogo" src="images/default-logo.png" alt="Company Logo" class="h-8">
+                        </div>
+                        <div id="qrcode" class="mt-4 flex justify-center"></div>
                     </div>
-                    <div id="photoFeedback"></div>
                 </div>
-                <div class="form-group">
-                    <label for="logoInput">Company Logo</label>
-                    <input type="file" id="logoInput" accept="image/*">
-                    <div id="logoPreview" class="hidden">
-                        <img id="previewLogo" src="./images/olark-logo.png" alt="Logo Preview">
-                    </div>
-                    <div id="logoFeedback"></div>
+
+                <!-- Form Section -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-700">Contact Information</h2>
+                    <form id="vcardForm" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                            <input type="text" id="title" name="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                            <input type="tel" id="phone" name="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                            <input type="text" id="company" name="company" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="photo" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+                            <input type="file" id="photo" name="photo" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div>
+                            <label for="logo" class="block text-sm font-medium text-gray-700">Company Logo</label>
+                            <input type="file" id="logo" name="logo" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="button" id="generateBtn" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Generate VCard</button>
+                            <button type="button" id="downloadBtn" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Download VCard</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-            <div id="vcardPreview" class="vcard-preview">
-                <!-- VCard preview will be displayed here -->
-            </div>
-            <div class="controls">
-                <button id="generateBtn" class="btn">Generate VCard</button>
-                <button id="downloadBtn" class="btn" disabled>Download VCard</button>
             </div>
         </main>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script type="module" src="./js/app.js"></script>
+    <script src="js/vcard.js" type="module"></script>
 </body>
 </html> 
