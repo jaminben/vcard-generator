@@ -1,28 +1,246 @@
+import { QRCodeHandler } from './qrCodeHandler.js';
+
 export class FormHandler {
   static formatPhoneNumber(phone) {
-    // Remove all non-digit characters
-    const cleaned = phone.replace(/\D/g, '');
-    
-    // Format as +1 (XXX) XXX-XXXX
-    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}`;
-    }
-    return phone;
+    // Remove all non-digit characters except +, (, ), and -
+    return phone.replace(/[^\d+()\s-]/g, '');
   }
 
   static updatePhoneNumber(input, value) {
-    const formatted = this.formatPhoneNumber(value);
-    if (formatted !== value) {
-      input.value = formatted;
-      // Announce the formatted number to screen readers
-      const announcement = document.createElement('div');
-      announcement.setAttribute('role', 'status');
-      announcement.setAttribute('aria-live', 'polite');
-      announcement.className = 'sr-only';
-      announcement.textContent = `Phone number formatted as: ${formatted}`;
-      document.body.appendChild(announcement);
-      setTimeout(() => announcement.remove(), 1000);
+    // Remove all non-digit characters except +, (, ), and -
+    const cleaned = value.replace(/[^\d+()\s-]/g, '');
+    input.value = cleaned;
+    
+    // If this is the phone input and WhatsApp is empty or matches the old phone number, mirror to WhatsApp
+    if (input.id === 'phone') {
+      const whatsappInput = document.getElementById('whatsapp');
+      if (whatsappInput && (!whatsappInput.value || whatsappInput.value === input.defaultValue)) {
+        whatsappInput.value = cleaned;
+        whatsappInput.defaultValue = cleaned;
+      }
+    }
+  }
+
+  static saveFormData() {
+    // Save form values
+    let formData = {
+      company: document.getElementById('company')?.value,
+      email: document.getElementById('email')?.value,
+      phone: document.getElementById('phone')?.value,
+      whatsapp: document.getElementById('whatsapp')?.value,
+      website: document.getElementById('website')?.value,
+      whatsappMessage: document.getElementById('whatsappMessage')?.value,
+      smsMessage: document.getElementById('smsMessage')?.value,
+      logoSource: document.querySelector('input[name="logoSource"]:checked')?.value,
+      photoData: window.photoData,
+      logoData: window.logoData
+    };
+    localStorage.setItem('vcardFormData', JSON.stringify(formData));
+  }
+
+  static restoreFormValues() {
+    let savedData = localStorage.getItem('vcardFormData');
+    console.log('Saved data from localStorage:', savedData);
+    
+    if (savedData) {
+      let formData = JSON.parse(savedData);
+      console.log('Parsed form data:', formData);
+      
+      // Restore form values
+      if (formData.company) document.getElementById('company').value = formData.company;
+      if (formData.email) document.getElementById('email').value = formData.email;
+      if (formData.phone) document.getElementById('phone').value = formData.phone;
+      if (formData.whatsapp) document.getElementById('whatsapp').value = formData.whatsapp;
+      if (formData.website) document.getElementById('website').value = formData.website;
+      if (formData.whatsappMessage) document.getElementById('whatsappMessage').value = formData.whatsappMessage;
+      if (formData.smsMessage) document.getElementById('smsMessage').value = formData.smsMessage;
+      
+      // Restore logo source selection
+      if (formData.logoSource) {
+        console.log('Restoring logo source:', formData.logoSource);
+        
+        // Uncheck all radio buttons first
+        document.querySelectorAll('input[name="logoSource"]').forEach(radio => {
+          radio.checked = false;
+        });
+        
+        // Check the saved radio button
+        let radio = document.querySelector(`input[name="logoSource"][value="${formData.logoSource}"]`);
+        console.log('Found radio button:', radio);
+        
+        if (radio) {
+          radio.checked = true;
+          console.log('Set radio button checked:', radio.value);
+          
+          // Handle logo upload section visibility
+          let logoUploadSection = document.getElementById('logoUploadSection');
+          if (logoUploadSection) {
+            if (formData.logoSource === 'upload') {
+              logoUploadSection.classList.remove('hidden');
+              console.log('Showing logo upload section');
+            } else {
+              logoUploadSection.classList.add('hidden');
+              console.log('Hiding logo upload section');
+            }
+          }
+        } else {
+          console.warn('Could not find radio button for value:', formData.logoSource);
+        }
+      }
+      
+      // Restore image data
+      if (formData.photoData) {
+        window.photoData = formData.photoData;
+        let photoPreview = document.getElementById('previewImage');
+        if (photoPreview) {
+          photoPreview.src = formData.photoData;
+          photoPreview.parentElement.classList.remove('hidden');
+        }
+      }
+      
+      if (formData.logoData) {
+        window.logoData = formData.logoData;
+        let logoPreview = document.getElementById('previewLogo');
+        if (logoPreview) {
+          logoPreview.src = formData.logoData;
+          logoPreview.parentElement.classList.remove('hidden');
+        }
+      }
+      
+      // If we have all required data, regenerate QR codes
+      if (formData.company && formData.email) {
+        // Set the correct logo data based on the saved logo source
+        if (formData.logoSource === 'photo' && formData.photoData) {
+          window.logoData = formData.photoData;
+        } else if (formData.logoSource === 'upload' && formData.logoData) {
+          window.logoData = formData.logoData;
+        }
+        
+        // Generate QR codes
+        QRCodeHandler.generateVCardQRCode();
+        QRCodeHandler.generateWhatsAppQRCode();
+        QRCodeHandler.generateSMSQRCode();
+        
+        // Show download section
+        let downloadSection = document.getElementById('downloadSection');
+        if (downloadSection) {
+          downloadSection.classList.remove('hidden');
+        }
+      }
+    }
+  }
+
+  static handleFileUpload(inputId, previewId, feedbackId, maxSize = 5 * 1024 * 1024) {
+    let input = document.getElementById(inputId);
+    let preview = document.getElementById(previewId);
+    let feedback = document.getElementById(feedbackId);
+    let dropZone = document.getElementById(inputId === 'photoInput' ? 'photoDrop' : 'logoDrop');
+
+    if (!input || !preview || !feedback || !dropZone) return;
+
+    // Handle drag and drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => {
+        dropZone.classList.add('border-blue-700', 'bg-blue-50');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => {
+        dropZone.classList.remove('border-blue-700', 'bg-blue-50');
+      });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      let file = e.dataTransfer.files[0];
+      if (file) {
+        input.files = e.dataTransfer.files;
+        handleFileChange(file);
+      }
+    });
+
+    // Handle file input change
+    input.addEventListener('change', () => {
+      let file = input.files[0];
+      if (file) {
+        handleFileChange(file);
+      }
+    });
+
+    function handleFileChange(file) {
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        feedback.textContent = 'Please upload an image file';
+        feedback.classList.add('text-red-600');
+        return;
+      }
+
+      if (file.size > maxSize) {
+        feedback.textContent = `File size must be less than ${maxSize / 1024 / 1024}MB`;
+        feedback.classList.add('text-red-600');
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        preview.classList.remove('hidden');
+        let img = preview.querySelector('img');
+        if (img) {
+          img.src = e.target.result;
+        }
+
+        // Store the image data
+        if (inputId === 'photoInput') {
+          window.photoData = e.target.result;
+          // Only set logoData to photoData if there is no existing logoData
+          if (!window.logoData) {
+            window.logoData = e.target.result;
+            // If "Use Profile Photo" is selected, regenerate QR codes
+            let photoRadio = document.querySelector('input[name="logoSource"][value="photo"]');
+            if (photoRadio && photoRadio.checked) {
+              QRCodeHandler.regenerateQRCodes();
+            }
+          }
+        } else if (inputId === 'logoInput') {
+          window.logoData = e.target.result;
+          QRCodeHandler.regenerateQRCodes();
+        }
+
+        // Save form data after successful upload
+        FormHandler.saveFormData();
+
+        feedback.textContent = 'File uploaded successfully';
+        feedback.classList.remove('text-red-600');
+        feedback.classList.add('text-green-600');
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  static showSuccess(elementId, message) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.textContent = message;
+      element.classList.remove('text-red-500');
+      element.classList.add('text-green-500');
+    }
+  }
+
+  static showError(elementId, message) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.textContent = message;
+      element.classList.remove('text-green-500');
+      element.classList.add('text-red-500');
     }
   }
 
@@ -42,57 +260,6 @@ export class FormHandler {
         `Hi ${firstName}, I'd like to connect with you.` :
         'hi from me on sms';
       smsMessage.setAttribute('aria-label', `SMS message template: ${smsMessage.value}`);
-    }
-  }
-
-  static saveFormValues() {
-    const formData = {
-      firstName: document.getElementById('firstName')?.value || '',
-      lastName: document.getElementById('lastName')?.value || '',
-      phone: document.getElementById('phone')?.value || '',
-      whatsapp: document.getElementById('whatsapp')?.value || '',
-      email: document.getElementById('email')?.value || '',
-      website: document.getElementById('website')?.value || '',
-      company: document.getElementById('company')?.value || '',
-      jobTitle: document.getElementById('jobTitle')?.value || '',
-      whatsappMessage: document.getElementById('whatsappMessage')?.value || '',
-      smsMessage: document.getElementById('smsMessage')?.value || ''
-    };
-    
-    localStorage.setItem('vcardFormData', JSON.stringify(formData));
-  }
-
-  static restoreFormValues() {
-    const savedData = localStorage.getItem('vcardFormData');
-    if (savedData) {
-      const formData = JSON.parse(savedData);
-      
-      Object.entries(formData).forEach(([key, value]) => {
-        const element = document.getElementById(key);
-        if (element) {
-          element.value = value;
-        }
-      });
-    }
-  }
-
-  static showError(elementId, message) {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.textContent = message;
-      element.className = 'text-red-700 font-medium mt-2';
-      element.setAttribute('role', 'alert');
-      element.setAttribute('aria-live', 'assertive');
-    }
-  }
-
-  static showSuccess(elementId, message) {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.textContent = message;
-      element.className = 'text-green-700 font-medium mt-2';
-      element.setAttribute('role', 'status');
-      element.setAttribute('aria-live', 'polite');
     }
   }
 
@@ -165,6 +332,47 @@ export class FormHandler {
       whatsappInput.setAttribute('aria-invalid', 'false');
       whatsappInput.addEventListener('input', () => {
         whatsappInput.setAttribute('aria-invalid', !whatsappInput.validity.valid);
+      });
+    }
+  }
+
+  static setupFileUpload(dropZoneId, inputId, previewId, feedbackId, dataProperty) {
+    const dropZone = document.getElementById(dropZoneId);
+    const fileInput = document.getElementById(inputId);
+
+    if (dropZone) {
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.style.borderColor = '#000';
+      });
+
+      dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.style.borderColor = '#ccc';
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.style.borderColor = '#ccc';
+
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          this.handleFileUpload(file, previewId, feedbackId, dataProperty);
+        } else {
+          this.showError(feedbackId, 'Please drop an image file');
+        }
+      });
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          this.handleFileUpload(file, previewId, feedbackId, dataProperty);
+        }
       });
     }
   }
