@@ -96,8 +96,8 @@ button[type="button"] {
 
 .btn:hover,
 button[type="button"]:hover {
-    background-color: #ff5268 !important;
-    transform: translateY(-2px) !important;
+/*    background-color: #ff5268 !important;
+*/    transform: translateY(-2px) !important;
 }
 
 .btn:disabled,
