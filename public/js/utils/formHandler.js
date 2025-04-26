@@ -53,48 +53,45 @@ export class FormHandler {
   }
 
   static restoreFormValues() {
-    let savedData = localStorage.getItem('vcardFormData');
-    let savedQRData = localStorage.getItem('qrData');
-
-    if (savedData) {
-      const formData = JSON.parse(savedData);
-      
-      // Restore form values
-      if (formData.company) document.getElementById('company').value = formData.company;
-      if (formData.email) document.getElementById('email').value = formData.email;
-      if (formData.phone) document.getElementById('phone').value = formData.phone;
-      if (formData.whatsapp) document.getElementById('whatsapp').value = formData.whatsapp;
-      if (formData.website) document.getElementById('website').value = formData.website;
-      if (formData.whatsappMessage) document.getElementById('whatsappMessage').value = formData.whatsappMessage;
-      if (formData.smsMessage) document.getElementById('smsMessage').value = formData.smsMessage;
-      
-      // Restore photo and logo data
-      if (formData.photoData) {
-        window.photoData = formData.photoData;
-        const photoPreview = document.getElementById('photoPreview');
-        const previewImage = document.getElementById('previewImage');
-        if (photoPreview && previewImage) {
-          photoPreview.classList.remove('hidden');
-          previewImage.src = formData.photoData;
-        }
+    const savedData = localStorage.getItem('vcardFormData');
+    const savedQRData = localStorage.getItem('qrData');
+    const formData = savedData ? JSON.parse(savedData) : {};
+    
+    // Restore form field values
+    if (formData.company) document.getElementById('company').value = formData.company;
+    if (formData.email) document.getElementById('email').value = formData.email;
+    if (formData.phone) document.getElementById('phone').value = formData.phone;
+    if (formData.whatsapp) document.getElementById('whatsapp').value = formData.whatsapp;
+    if (formData.website) document.getElementById('website').value = formData.website;
+    if (formData.whatsappMessage) document.getElementById('whatsappMessage').value = formData.whatsappMessage;
+    if (formData.smsMessage) document.getElementById('smsMessage').value = formData.smsMessage;
+    
+    // Restore photo and logo data
+    if (formData.photoData) {
+      window.photoData = formData.photoData;
+      const photoPreview = document.getElementById('photoPreview');
+      const previewImage = document.getElementById('previewImage');
+      if (photoPreview && previewImage) {
+        photoPreview.classList.remove('hidden');
+        previewImage.src = formData.photoData;
       }
-      
-      if (formData.logoData) {
-        window.logoData = formData.logoData;
-      }
-      
-      // Restore logo source selection
-      if (formData.logoSource) {
-        const radioBtn = document.querySelector(`input[name="logoSource"][value="${formData.logoSource}"]`);
-        if (radioBtn) {
-          radioBtn.checked = true;
-          const logoUploadSection = document.getElementById('logoUploadSection');
-          if (logoUploadSection) {
-            if (formData.logoSource === 'upload') {
-              logoUploadSection.classList.remove('hidden');
-            } else {
-              logoUploadSection.classList.add('hidden');
-            }
+    }
+    
+    if (formData.logoData) {
+      window.logoData = formData.logoData;
+    }
+    
+    // Restore logo source selection
+    if (formData.logoSource) {
+      const radioBtn = document.querySelector(`input[name="logoSource"][value="${formData.logoSource}"]`);
+      if (radioBtn) {
+        radioBtn.checked = true;
+        const logoUploadSection = document.getElementById('logoUploadSection');
+        if (logoUploadSection) {
+          if (formData.logoSource === 'upload') {
+            logoUploadSection.classList.remove('hidden');
+          } else {
+            logoUploadSection.classList.add('hidden');
           }
         }
       }
@@ -234,8 +231,18 @@ export class FormHandler {
     const element = document.getElementById(elementId);
     if (element) {
       element.textContent = message;
-      element.classList.remove('text-red-500');
-      element.classList.add('text-green-500');
+      element.classList.remove('text-red-600');
+      element.classList.add('text-green-600');
+      element.setAttribute('role', 'status');
+      element.setAttribute('aria-live', 'polite');
+      
+      // Create a live region for screen readers
+      const liveRegion = document.createElement('div');
+      liveRegion.setAttribute('role', 'status');
+      liveRegion.setAttribute('aria-live', 'polite');
+      liveRegion.textContent = message;
+      document.body.appendChild(liveRegion);
+      setTimeout(() => document.body.removeChild(liveRegion), 5000);
     }
   }
 
@@ -243,8 +250,18 @@ export class FormHandler {
     const element = document.getElementById(elementId);
     if (element) {
       element.textContent = message;
-      element.classList.remove('text-green-500');
-      element.classList.add('text-red-500');
+      element.classList.remove('text-green-600');
+      element.classList.add('text-red-600');
+      element.setAttribute('role', 'alert');
+      element.setAttribute('aria-live', 'assertive');
+      
+      // Create a live region for screen readers
+      const liveRegion = document.createElement('div');
+      liveRegion.setAttribute('role', 'alert');
+      liveRegion.setAttribute('aria-live', 'assertive');
+      liveRegion.textContent = `Error: ${message}`;
+      document.body.appendChild(liveRegion);
+      setTimeout(() => document.body.removeChild(liveRegion), 5000);
     }
   }
 
@@ -268,11 +285,11 @@ export class FormHandler {
   }
 
   static validateForm() {
-    const requiredFields = ['firstName', 'lastName', 'phone', 'email'];
+    const requiredFields = ['email', 'phone'];
     let isValid = true;
     let firstError = null;
 
-    // Clear previous error messages
+    // Clear previous error messages and states
     document.querySelectorAll('[role="alert"]').forEach(el => {
       el.textContent = '';
       el.removeAttribute('role');
@@ -288,11 +305,15 @@ export class FormHandler {
       if (!errorDiv) {
         errorDiv = document.createElement('div');
         errorDiv.id = errorId;
+        errorDiv.setAttribute('role', 'alert');
+        errorDiv.setAttribute('aria-live', 'polite');
         input.parentNode.appendChild(errorDiv);
       }
 
       if (!input.value.trim()) {
         this.showError(errorId, `${input.labels[0].textContent.replace('*', '').trim()} is required`);
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', errorId);
         isValid = false;
         if (!firstError) firstError = input;
       } else if (input.validity && !input.validity.valid) {
@@ -305,15 +326,27 @@ export class FormHandler {
           message = input.validationMessage;
         }
         this.showError(errorId, message);
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', errorId);
         isValid = false;
         if (!firstError) firstError = input;
+      } else {
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+        errorDiv.textContent = '';
       }
     });
 
-    // Focus the first error field
+    // Focus the first error field and announce the error
     if (firstError) {
       firstError.focus();
-      firstError.setAttribute('aria-invalid', 'true');
+      const errorMessage = document.getElementById(`${firstError.id}-error`).textContent;
+      const liveRegion = document.createElement('div');
+      liveRegion.setAttribute('role', 'alert');
+      liveRegion.setAttribute('aria-live', 'assertive');
+      liveRegion.textContent = `Error: ${errorMessage}`;
+      document.body.appendChild(liveRegion);
+      setTimeout(() => document.body.removeChild(liveRegion), 5000);
     }
 
     return isValid;
@@ -326,16 +359,38 @@ export class FormHandler {
     if (phoneInput) {
       phoneInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
       phoneInput.setAttribute('aria-invalid', 'false');
+      phoneInput.setAttribute('aria-label', 'Phone number with country code');
+      phoneInput.setAttribute('aria-required', 'true');
+      
       phoneInput.addEventListener('input', () => {
-        phoneInput.setAttribute('aria-invalid', !phoneInput.validity.valid);
+        const isValid = phoneInput.validity.valid;
+        phoneInput.setAttribute('aria-invalid', !isValid);
+        
+        if (isValid) {
+          const formattedNumber = this.formatPhoneNumber(phoneInput.value);
+          phoneInput.value = formattedNumber;
+          
+          // Mirror to WhatsApp if empty
+          if (whatsappInput && !whatsappInput.value) {
+            whatsappInput.value = formattedNumber;
+          }
+        }
       });
     }
     
     if (whatsappInput) {
       whatsappInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
       whatsappInput.setAttribute('aria-invalid', 'false');
+      whatsappInput.setAttribute('aria-label', 'WhatsApp number with country code');
+      
       whatsappInput.addEventListener('input', () => {
-        whatsappInput.setAttribute('aria-invalid', !whatsappInput.validity.valid);
+        const isValid = whatsappInput.validity.valid;
+        whatsappInput.setAttribute('aria-invalid', !isValid);
+        
+        if (isValid) {
+          const formattedNumber = this.formatPhoneNumber(whatsappInput.value);
+          whatsappInput.value = formattedNumber;
+        }
       });
     }
   }
@@ -343,24 +398,32 @@ export class FormHandler {
   static setupFileUpload(dropZoneId, inputId, previewId, feedbackId, dataProperty) {
     const dropZone = document.getElementById(dropZoneId);
     const fileInput = document.getElementById(inputId);
+    const feedback = document.getElementById(feedbackId);
 
     if (dropZone) {
+      dropZone.setAttribute('role', 'region');
+      dropZone.setAttribute('aria-label', 'File upload area');
+      dropZone.setAttribute('tabindex', '0');
+      
       dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        e.target.style.borderColor = '#000';
+        dropZone.classList.add('border-blue-700', 'bg-blue-50');
+        dropZone.setAttribute('aria-label', 'Drop file here');
       });
 
       dropZone.addEventListener('dragleave', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        e.target.style.borderColor = '#ccc';
+        dropZone.classList.remove('border-blue-700', 'bg-blue-50');
+        dropZone.setAttribute('aria-label', 'File upload area');
       });
 
       dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        e.target.style.borderColor = '#ccc';
+        dropZone.classList.remove('border-blue-700', 'bg-blue-50');
+        dropZone.setAttribute('aria-label', 'File upload area');
 
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
@@ -369,15 +432,29 @@ export class FormHandler {
           this.showError(feedbackId, 'Please drop an image file');
         }
       });
+
+      // Add keyboard support
+      dropZone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
     }
 
     if (fileInput) {
+      fileInput.setAttribute('aria-label', 'Choose file to upload');
       fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
           this.handleFileUpload(file, previewId, feedbackId, dataProperty);
         }
       });
+    }
+
+    if (feedback) {
+      feedback.setAttribute('role', 'status');
+      feedback.setAttribute('aria-live', 'polite');
     }
   }
 } 

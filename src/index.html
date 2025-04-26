@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company QR and vCard Generator | Olark</title>
+    <meta name="description" content="Generate QR codes and vCards for your company contact information">
+    <meta name="author" content="Olark">
+    <!-- Structured data for better SEO and accessibility -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Company QR and vCard Generator",
+      "description": "Generate QR codes and vCards for your company contact information",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web"
+    }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Add preconnect for Google Fonts -->
@@ -13,168 +26,191 @@
     <!-- Load our custom CSS last -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <header class="bg-[#6B5094] py-6 mb-8">
+<body class="min-h-screen">
+    <!-- Header section with navigation -->
+    <header class="py-6 mb-8" role="banner">
         <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
             <img src="images/olark-logo-white.svg" alt="Olark" class="h-8">
-            <h1 class="text-white text-xl font-bold">Company QR and vCard Generator</h1>
+            <h1 class="text-white text-xl font-bold">Free QR Code and vCard Generator for your Business</h1>
         </div>
     </header>
     
-    <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl" role="main">
+    <!-- Main content area -->
+    <main class="max-w-4xl mx-auto p-6 bg-white rounded-xl" role="main">
+        <!-- Skip to main content link for keyboard users -->
         <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:p-4 focus:z-50">Skip to main content</a>
         
-        <div id="main-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div>
-            <label for="company" class="block text-sm font-medium text-gray-900 mb-1">Company</label>
-            <input type="text" id="company" name="company" placeholder="Enter company name"
-              class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-              aria-describedby="company-help">
-            <p id="company-help" class="text-sm text-gray-700 mt-1">Optional - Enter your company or organization</p>
-          </div>
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-900 mb-1">Email Address <span class="text-red-700" aria-label="required">*</span></label>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required
-              class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-              aria-required="true" aria-describedby="email-help">
-            <p id="email-help" class="text-sm text-gray-700 mt-1">Enter a valid email address</p>
-          </div>
-          <div>
-            <label for="phone" class="block text-sm font-medium text-gray-900 mb-1">Phone Number <span class="text-red-700" aria-label="required">*</span></label>
-            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 555-5555" required
-              class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-              aria-required="true" pattern="[0-9+\\s\\(\\)\\-]{10,}" aria-describedby="phone-format">
-            <p id="phone-format" class="text-sm text-gray-700 mt-1">Format: +1 (555) 555-5555 - Include country code and area code</p>
-          </div>
-          <div>
-            <label for="whatsapp" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Number</label>
-            <input type="tel" id="whatsapp" name="whatsapp" placeholder="+1 (555) 555-5555"
-              class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-              pattern="[0-9+\\s\\(\\)\\-]{10,}" aria-describedby="whatsapp-format">
-            <p id="whatsapp-format" class="text-sm text-gray-700 mt-1">Optional - Use the same format as phone number</p>
-          </div>
-          <div>
-            <label for="website" class="block text-sm font-medium text-gray-900 mb-1">Website</label>
-            <input type="url" id="website" name="website" placeholder="https://example.com"
-              class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-              aria-describedby="website-help">
-            <p id="website-help" class="text-sm text-gray-700 mt-1">Optional - Include https:// or http://</p>
-          </div>
-        </div>
-      
-        <div class="mb-6" role="region" aria-labelledby="photo-section">
-          <h2 id="photo-section" class="text-lg font-medium text-gray-900 mb-4">Profile Photo</h2>
-          <div id="photoDrop" role="region" aria-label="Photo upload area" tabindex="0"
-            class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-            aria-describedby="photo-help">
-            <div id="photoPreview" class="hidden mb-4">
-              <img id="previewImage" class="mx-auto max-h-48 rounded-lg shadow-md" src="" alt="Profile photo preview">
+        <!-- Introduction section -->
+        <section class="mb-8" aria-labelledby="intro-heading">
+            <h2 id="intro-heading" class="sr-only">About this tool</h2>
+            <p class="text-gray-700 mb-4">Generate QR codes and vCards to create shareable contact cards and QR codes. Use these codes to make it easy for your customers to text and whatsapp you when they need help.</p>
+        </section>
+        
+        <!-- Contact information form -->
+        <section id="main-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" aria-labelledby="contact-heading">
+            <h2 id="contact-heading" class="sr-only">Contact Information</h2>
+            <div>
+                <label for="company" class="block text-sm font-medium text-gray-900 mb-1">Company Name <span class="text-red-700" aria-label="required">*</span></label>
+                <input type="text" id="company" name="company" placeholder="Enter company name" required
+                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                    aria-required="true" aria-describedby="company-help">
+                <p id="company-help" class="text-sm text-gray-700 mt-1">Enter your company or organization name</p>
             </div>
-            <p class="text-gray-900">Drag and drop photo here</p>
-            <p class="text-gray-700 text-sm my-2">or</p>
-            <label for="photoInput" class="block text-sm text-gray-900 mb-2">Select a photo file</label>
-            <input type="file" id="photoInput" name="photo" accept="image/*" 
-              class="block mx-auto" aria-label="Choose photo file">
-          </div>
-          <p id="photo-help" class="text-sm text-gray-700 mt-2">Accepted formats: JPG, PNG, GIF. Maximum size: 5MB</p>
-          <div id="photoFeedback" class="mt-2 text-sm" role="status" aria-live="polite"></div>
-        </div>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-900 mb-1">Company Email Address <span class="text-red-700" aria-label="required">*</span></label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required
+                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                    aria-required="true" aria-describedby="email-help">
+                <p id="email-help" class="text-sm text-gray-700 mt-1">Enter a valid email address</p>
+            </div>
+            <div>
+                <label for="phone" class="block text-sm font-medium text-gray-900 mb-1">Phone Number <span class="text-red-700" aria-label="required">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 (555) 555-5555" required
+                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                    aria-required="true" pattern="[0-9+\\s\\(\\)\\-]{10,}" aria-describedby="phone-format">
+                <p id="phone-format" class="text-sm text-gray-700 mt-1">Format: +1 (555) 555-5555 - Include country code and area code</p>
+            </div>
+            <div>
+                <label for="whatsapp" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Number</label>
+                <input type="tel" id="whatsapp" name="whatsapp" placeholder="+1 (555) 555-5555"
+                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                    pattern="[0-9+\\s\\(\\)\\-]{10,}" aria-describedby="whatsapp-format">
+                <p id="whatsapp-format" class="text-sm text-gray-700 mt-1">Optional - Use the same format as phone number</p>
+            </div>
+            <div>
+                <label for="website" class="block text-sm font-medium text-gray-900 mb-1">Website</label>
+                <input type="url" id="website" name="website" placeholder="https://example.com"
+                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                    aria-describedby="website-help">
+                <p id="website-help" class="text-sm text-gray-700 mt-1">Optional - Include https:// or http://</p>
+            </div>
+        </section>
       
-        <div class="mb-6" role="region" aria-labelledby="logo-section">
-          <h2 id="logo-section" class="text-lg font-medium text-gray-900 mb-4">QR Code Logo</h2>
-          
-          <div class="mb-4 flex space-x-4">
-            <label class="flex-1">
-              <input type="radio" name="logoSource" value="photo" class="peer sr-only" checked>
-              <div class="p-4 border-2 border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 peer-checked:border-blue-700 peer-checked:bg-blue-50">
-                <p class="text-gray-900 font-medium">Use Profile Photo</p>
-                <p class="text-gray-700 text-sm mt-1">Use your uploaded profile photo as the QR code logo</p>
-              </div>
-            </label>
+        <!-- Profile photo section -->
+        <section class="mb-6" role="region" aria-labelledby="photo-section">
+            <h2 id="photo-section" class="text-lg font-medium text-gray-900 mb-4">Profile Photo</h2>
+            <div id="photoDrop" role="region" aria-label="Photo upload area" tabindex="0"
+                class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                aria-describedby="photo-help">
+                <div id="photoPreview" class="hidden mb-4">
+                    <img id="previewImage" class="mx-auto max-h-48 rounded-lg shadow-md" src="" alt="Profile photo preview">
+                </div>
+                <p class="text-gray-900">Drag and drop photo here</p>
+                <p class="text-gray-700 text-sm my-2">or</p>
+                <label for="photoInput" class="block text-sm text-gray-900 mb-2">Select a photo file</label>
+                <input type="file" id="photoInput" name="photo" accept="image/*" 
+                    class="block mx-auto" aria-label="Choose photo file">
+            </div>
+            <p id="photo-help" class="text-sm text-gray-700 mt-2">Accepted formats: JPG, PNG, GIF. Maximum size: 5MB</p>
+            <div id="photoFeedback" class="mt-2 text-sm" role="status" aria-live="polite"></div>
+        </section>
+      
+        <!-- QR code logo section -->
+        <section class="mb-6" role="region" aria-labelledby="logo-section">
+            <h2 id="logo-section" class="text-lg font-medium text-gray-900 mb-4">QR Code Logo</h2>
             
-            <label class="flex-1">
-              <input type="radio" name="logoSource" value="upload" class="peer sr-only">
-              <div class="p-4 border-2 border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 peer-checked:border-blue-700 peer-checked:bg-blue-50">
-                <p class="text-gray-900 font-medium">Upload New Logo</p>
-                <p class="text-gray-700 text-sm mt-1">Upload a custom logo for your QR code</p>
-              </div>
-            </label>
-          </div>
+            <div class="mb-4 flex space-x-4" role="radiogroup" aria-labelledby="logo-section">
+                <label class="flex-1">
+                    <input type="radio" name="logoSource" value="photo" class="peer sr-only" checked>
+                    <div class="p-4 border-2 border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 peer-checked:border-blue-700 peer-checked:bg-blue-50">
+                        <p class="text-gray-900 font-medium">Use Profile Photo</p>
+                        <p class="text-gray-700 text-sm mt-1">Use your uploaded profile photo as the QR code logo</p>
+                    </div>
+                </label>
+                
+                <label class="flex-1">
+                    <input type="radio" name="logoSource" value="upload" class="peer sr-only">
+                    <div class="p-4 border-2 border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 peer-checked:border-blue-700 peer-checked:bg-blue-50">
+                        <p class="text-gray-900 font-medium">Upload New Logo</p>
+                        <p class="text-gray-700 text-sm mt-1">Upload a custom logo for your QR code</p>
+                    </div>
+                </label>
+            </div>
 
-          <div id="logoUploadSection" class="hidden">
-            <div id="logoDrop" role="region" aria-label="Logo upload area" tabindex="0"
-              class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-              aria-describedby="logo-help">
-              <div id="logoPreview" class="hidden mb-4">
-                <img id="previewLogo" class="mx-auto max-h-48 rounded-lg shadow-md" src="" alt="QR code logo preview">
-              </div>
-              <p class="text-gray-900">Drag and drop logo here</p>
-              <p class="text-gray-700 text-sm my-2">or</p>
-              <label for="logoInput" class="block text-sm text-gray-900 mb-2">Select a logo file</label>
-              <input type="file" id="logoInput" name="logo" accept="image/*" 
-                class="block mx-auto" aria-label="Choose logo file">
+            <div id="logoUploadSection" class="hidden">
+                <div id="logoDrop" role="region" aria-label="Logo upload area" tabindex="0"
+                    class="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                    aria-describedby="logo-help">
+                    <div id="logoPreview" class="hidden mb-4">
+                        <img id="previewLogo" class="mx-auto max-h-48 rounded-lg shadow-md" src="" alt="QR code logo preview">
+                    </div>
+                    <p class="text-gray-900">Drag and drop logo here</p>
+                    <p class="text-gray-700 text-sm my-2">or</p>
+                    <label for="logoInput" class="block text-sm text-gray-900 mb-2">Select a logo file</label>
+                    <input type="file" id="logoInput" name="logo" accept="image/*" 
+                        class="block mx-auto" aria-label="Choose logo file">
+                </div>
+                <p id="logo-help" class="text-sm text-gray-700 mt-2">For best results, use a square logo with transparent background</p>
+                <div id="logoFeedback" class="mt-2 text-sm" role="status" aria-live="polite"></div>
             </div>
-            <p id="logo-help" class="text-sm text-gray-700 mt-2">For best results, use a square logo with transparent background</p>
-            <div id="logoFeedback" class="mt-2 text-sm" role="status" aria-live="polite"></div>
-          </div>
-        </div>
+        </section>
       
-        <div class="mb-6" role="region" aria-labelledby="message-section">
-          <h2 id="message-section" class="text-lg font-medium text-gray-900 mb-4">Message Templates</h2>
-          <div class="space-y-4">
-            <div>
-              <label for="whatsappMessage" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Message</label>
-              <input type="text" id="whatsappMessage" name="whatsappMessage" placeholder="Hi, I'd like to connect with you on WhatsApp"
-                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-                aria-describedby="whatsapp-msg-help">
-              <p id="whatsapp-msg-help" class="text-sm text-gray-700 mt-1">Message to include with your WhatsApp QR code</p>
+        <!-- Message templates section -->
+        <section class="mb-6" role="region" aria-labelledby="message-section">
+            <h2 id="message-section" class="text-lg font-medium text-gray-900 mb-4">Message Templates</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="whatsappMessage" class="block text-sm font-medium text-gray-900 mb-1">WhatsApp Message</label>
+                    <input type="text" id="whatsappMessage" name="whatsappMessage" placeholder="Hi, I'd like to connect with you on WhatsApp"
+                        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                        aria-describedby="whatsapp-msg-help">
+                    <p id="whatsapp-msg-help" class="text-sm text-gray-700 mt-1">Message to include with your WhatsApp QR code</p>
+                </div>
+                <div>
+                    <label for="smsMessage" class="block text-sm font-medium text-gray-900 mb-1">SMS Message</label>
+                    <input type="text" id="smsMessage" name="smsMessage" placeholder="Hi, I'd like to connect with you"
+                        class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
+                        aria-describedby="sms-msg-help">
+                    <p id="sms-msg-help" class="text-sm text-gray-700 mt-1">Message to include with your SMS QR code</p>
+                </div>
             </div>
-            <div>
-              <label for="smsMessage" class="block text-sm font-medium text-gray-900 mb-1">SMS Message</label>
-              <input type="text" id="smsMessage" name="smsMessage" placeholder="Hi, I'd like to connect with you"
-                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700"
-                aria-describedby="sms-msg-help">
-              <p id="sms-msg-help" class="text-sm text-gray-700 mt-1">Message to include with your SMS QR code</p>
-            </div>
-          </div>
-        </div>
+        </section>
       
-        <button id="generateBtn" type="button"
-          class="w-full bg-[#FFB800] text-gray-900 py-3 px-4 rounded-md hover:bg-[#E6A600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 transition-colors text-lg font-medium"
-          aria-label="Generate vCard and QR codes">
-          Generate vCard
-        </button>
+        <!-- Action buttons -->
+        <section class="mb-6" role="region" aria-label="Actions">
+            <button id="generateBtn" type="button"
+                class="w-full bg-[#FFB800] text-gray-900 py-3 px-4 rounded-md hover:bg-[#E6A600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 transition-colors text-lg font-medium"
+                aria-label="Generate vCard and QR codes">
+                Generate vCard
+            </button>
+            
+            <div id="downloadSection" class="mt-4 hidden" role="region" aria-label="Download options">
+                <button id="downloadBtn" type="button"
+                    class="w-full bg-[#6B5094] text-white py-2 px-4 rounded-md hover:bg-[#5A4380] focus:outline-none focus:ring-2 focus:ring-[#6B5094] focus:ring-offset-2 transition-colors"
+                    aria-label="Download vCard with photo">
+                    Download vCard
+                </button>
+            </div>
+        </section>
         
-        <div id="downloadSection" class="mt-4 hidden" role="region" aria-label="Download options">
-          <button id="downloadBtn" type="button"
-            class="w-full bg-[#6B5094] text-white py-2 px-4 rounded-md hover:bg-[#5A4380] focus:outline-none focus:ring-2 focus:ring-[#6B5094] focus:ring-offset-2 transition-colors"
-            aria-label="Download vCard with photo">
-            Download vCard
-          </button>
-        </div>
-        
-        <div class="mt-8 space-y-8">
-          <section aria-labelledby="vcard-qr-heading">
-            <h2 id="vcard-qr-heading" class="text-lg font-medium text-gray-900 mb-4">vCard QR Code</h2>
-            <div id="qrcode" class="flex justify-center" role="img" aria-label="vCard QR code"></div>
-          </section>
+        <!-- QR code display section -->
+        <section class="mt-8 space-y-8" role="region" aria-label="Generated QR codes">
+            <section aria-labelledby="vcard-qr-heading">
+                <h2 id="vcard-qr-heading" class="text-lg font-medium text-gray-900 mb-4">vCard QR Code</h2>
+                <div id="qrcode" class="flex justify-center" role="img" aria-label="vCard QR code"></div>
+            </section>
       
-          <section aria-labelledby="whatsapp-qr-heading">
-            <h2 id="whatsapp-qr-heading" class="text-lg font-medium text-gray-900 mb-4">WhatsApp QR Code</h2>
-            <div id="whatsappQrcode" class="flex justify-center" role="img" aria-label="WhatsApp QR code"></div>
-          </section>
+            <section aria-labelledby="whatsapp-qr-heading">
+                <h2 id="whatsapp-qr-heading" class="text-lg font-medium text-gray-900 mb-4">WhatsApp QR Code</h2>
+                <div id="whatsappQrcode" class="flex justify-center" role="img" aria-label="WhatsApp QR code"></div>
+            </section>
       
-          <section aria-labelledby="sms-qr-heading">
-            <h2 id="sms-qr-heading" class="text-lg font-medium text-gray-900 mb-4">SMS QR Code</h2>
-            <div id="smsQrcode" class="flex justify-center" role="img" aria-label="SMS QR code"></div>
-          </section>
+            <section aria-labelledby="sms-qr-heading">
+                <h2 id="sms-qr-heading" class="text-lg font-medium text-gray-900 mb-4">SMS QR Code</h2>
+                <div id="smsQrcode" class="flex justify-center" role="img" aria-label="SMS QR code"></div>
+            </section>
 
-          <section aria-labelledby="website-qr-heading">
-            <h2 id="website-qr-heading" class="text-lg font-medium text-gray-900 mb-4">Website QR Code</h2>
-            <div id="websiteQrcode" class="flex justify-center" role="img" aria-label="Website QR code"></div>
-          </section>
-        </div>
-      </div>
+            <section aria-labelledby="website-qr-heading">
+                <h2 id="website-qr-heading" class="text-lg font-medium text-gray-900 mb-4">Website QR Code</h2>
+                <div id="websiteQrcode" class="flex justify-center" role="img" aria-label="Website QR code"></div>
+            </section>
+        </section>
+    </main>
+
+    <!-- Footer section -->
+    <footer class="py-6 mt-8 text-center text-gray-600" role="contentinfo">
+        <p>© 2024 Olark. All rights reserved.</p>
+    </footer>
 
     <script type="module" src="js/main.js"></script>
 </body>
