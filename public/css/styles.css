@@ -16,7 +16,7 @@
 }
 
 /* Override Tailwind's background color */
-body.bg-gray-50 {
+body {
     background-color: var(--olark-purple) !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
