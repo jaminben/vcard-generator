@@ -1,5 +1,6 @@
 :root {
-    --olark-purple: #3B2F5C;
+    --olark-purple: rgb(61, 54, 131);
+    --olark-yellow: #FFB800;
     --olark-pink: #FF6B81;
     --olark-white: #FFFFFF;
     --olark-light-gray: #F5F6FA;
@@ -45,6 +46,7 @@ h1.text-3xl.font-bold {
     font-weight: 800 !important;
     margin-bottom: 1.5rem !important;
     line-height: 1.2 !important;
+    font-family: "Gibson Bold", sans-serif !important;
 }
 
 .vcard-preview {

@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       QRCodeHandler.generateVCardQRCode();
       QRCodeHandler.generateWhatsAppQRCode();
       QRCodeHandler.generateSMSQRCode();
+      QRCodeHandler.generateWebsiteQRCode();
 
       // Show and set up download button
       const downloadSection = document.getElementById('downloadSection');

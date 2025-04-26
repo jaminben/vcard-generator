@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olark VCard Generator</title>
+    <title>Company QR and vCard Generator | Olark</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Add preconnect for Google Fonts -->
@@ -14,10 +14,15 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <div class="max-w-4xl mx-auto p-6" role="main">
+    <header class="bg-[#6B5094] py-6 mb-8">
+        <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+            <img src="images/olark-logo-white.svg" alt="Olark" class="h-8">
+            <h1 class="text-white text-xl font-bold">Company QR and vCard Generator</h1>
+        </div>
+    </header>
+    
+    <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl" role="main">
         <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:p-4 focus:z-50">Skip to main content</a>
-        
-        <h1 class="text-3xl font-bold text-gray-900 mb-8" tabindex="-1">Olark vCard Generator</h1>
         
         <div id="main-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
@@ -135,14 +140,14 @@
         </div>
       
         <button id="generateBtn" type="button"
-          class="w-full bg-blue-800 text-white py-3 px-4 rounded-md hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-offset-2 transition-colors text-lg font-medium"
+          class="w-full bg-[#FFB800] text-gray-900 py-3 px-4 rounded-md hover:bg-[#E6A600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 transition-colors text-lg font-medium"
           aria-label="Generate vCard and QR codes">
           Generate vCard
         </button>
         
         <div id="downloadSection" class="mt-4 hidden" role="region" aria-label="Download options">
           <button id="downloadBtn" type="button"
-            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            class="w-full bg-[#6B5094] text-white py-2 px-4 rounded-md hover:bg-[#5A4380] focus:outline-none focus:ring-2 focus:ring-[#6B5094] focus:ring-offset-2 transition-colors"
             aria-label="Download vCard with photo">
             Download vCard
           </button>
@@ -162,6 +167,11 @@
           <section aria-labelledby="sms-qr-heading">
             <h2 id="sms-qr-heading" class="text-lg font-medium text-gray-900 mb-4">SMS QR Code</h2>
             <div id="smsQrcode" class="flex justify-center" role="img" aria-label="SMS QR code"></div>
+          </section>
+
+          <section aria-labelledby="website-qr-heading">
+            <h2 id="website-qr-heading" class="text-lg font-medium text-gray-900 mb-4">Website QR Code</h2>
+            <div id="websiteQrcode" class="flex justify-center" role="img" aria-label="Website QR code"></div>
           </section>
         </div>
       </div>

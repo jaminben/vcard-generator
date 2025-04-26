@@ -1,13 +1,14 @@
 import { execSync } from 'child_process';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-// Get the last commit message
+// Get the git information
 const lastCommitMessage = execSync('git log -1 --pretty=%B').toString().trim();
+const lastCommitRef = execSync('git rev-parse --short HEAD').toString().trim();
 const timestamp = new Date().toISOString();
 
 console.log('Starting build process...');
@@ -15,45 +16,62 @@ console.log('Root directory:', rootDir);
 console.log('Debug: Checking if src directory exists...');
 console.log('Src directory contents:', execSync('ls -la src/').toString());
 
-// Create public directory if it doesn't exist
-const publicDir = path.join(rootDir, 'public');
-if (!fs.existsSync(publicDir)) {
-    console.log('Creating public directory...');
-    fs.mkdirSync(publicDir, { recursive: true });
+async function copyDir(src, dest) {
+    try {
+        await fs.mkdir(dest, { recursive: true });
+        const entries = await fs.readdir(src, { withFileTypes: true });
+
+        for (let entry of entries) {
+            const srcPath = path.join(src, entry.name);
+            const destPath = path.join(dest, entry.name);
+
+            if (entry.isDirectory()) {
+                await copyDir(srcPath, destPath);
+            } else {
+                await fs.copyFile(srcPath, destPath);
+            }
+        }
+    } catch (error) {
+        console.error(`Error copying directory from ${src} to ${dest}:`, error);
+    }
 }
 
-// Clean the public directory first
-console.log('Cleaning public directory...');
-execSync('rm -rf public/*');
+async function addFooterToHtml() {
+    const indexPath = path.join(rootDir, 'public', 'index.html');
+    let html = await fs.readFile(indexPath, 'utf8');
 
-// Copy all files from src to public
-console.log('Copying files from src to public...');
-execSync('cp -r src/* public/');
-
-// Verify the files were copied
-console.log('Verifying copied files...');
-execSync('ls -la public/');
-
-// Read the index.html file
-const indexPath = path.join(publicDir, 'index.html');
-console.log('Reading index.html from:', indexPath);
-let html = fs.readFileSync(indexPath, 'utf8');
-
-// Add footer with timestamp and commit message
-const footer = `
+    // Add footer with timestamp and commit information
+    const footer = `
     <footer class="text-center text-sm text-gray-500 mt-8 py-4">
         <p>Last updated: ${timestamp}</p>
-        <p>Last commit: ${lastCommitMessage}</p>
-    </footer>
-`;
+        <p>Last commit (${lastCommitRef}): ${lastCommitMessage}</p>
+    </footer>`;
 
-// Insert footer before the closing body tag
-html = html.replace('</body>', `${footer}</body>`);
+    // Insert footer before the closing body tag
+    html = html.replace('</body>', `${footer}</body>`);
 
-// Write the modified file back
-console.log('Writing updated index.html...');
-fs.writeFileSync(indexPath, html);
+    // Write the modified file back
+    await fs.writeFile(indexPath, html);
+    console.log('Added footer with timestamp and commit information');
+}
 
-console.log('Build completed successfully!');
-console.log('Final public directory contents:');
-execSync('ls -la public/'); 
+async function build() {
+    try {
+        // Ensure public directory exists and is empty
+        await fs.rm('public', { recursive: true, force: true });
+        await fs.mkdir('public', { recursive: true });
+
+        // Copy all files from src to public
+        await copyDir('src', 'public');
+
+        // Add footer to index.html
+        await addFooterToHtml();
+
+        console.log('Build completed successfully!');
+    } catch (error) {
+        console.error('Build failed:', error);
+        process.exit(1);
+    }
+}
+
+build(); 

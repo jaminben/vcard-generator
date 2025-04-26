@@ -47,7 +47,7 @@ export class QRCodeHandler {
   }
 
   static regenerateQRCodes() {
-    const qrCodes = ['qrcode', 'whatsappQrcode', 'smsQrcode'];
+    const qrCodes = ['qrcode', 'whatsappQrcode', 'smsQrcode', 'websiteQrcode'];
     qrCodes.forEach(id => {
       const element = document.getElementById(id);
       if (element && element.querySelector('canvas')) {
@@ -110,6 +110,8 @@ export class QRCodeHandler {
         qrType = 'whatsapp-qrcode';
       } else if (elementId === 'smsQrcode') {
         qrType = 'sms-qrcode';
+      } else if (elementId === 'websiteQrcode') {
+        qrType = 'website-qrcode';
       }
 
       // Add logo if available
@@ -202,6 +204,17 @@ export class QRCodeHandler {
     }
   }
 
+  static generateWebsiteQRCode() {
+    const website = document.getElementById('website')?.value;
+    if (website) {
+      const websiteQrcode = document.getElementById('websiteQrcode');
+      if (websiteQrcode) {
+        websiteQrcode.setAttribute('data-content', website);
+      }
+      this.generateQRCode('websiteQrcode', website);
+    }
+  }
+
   static generateVCard() {
     const company = document.getElementById('company')?.value;
     const email = document.getElementById('email')?.value;
@@ -254,7 +267,7 @@ export class QRCodeHandler {
       window.logoData = canvas.toDataURL('image/png');
       
       // If there are any QR codes already generated, regenerate them with the logo
-      const qrCodes = ['qrcode', 'whatsappQrcode', 'smsQrcode'];
+      const qrCodes = ['qrcode', 'whatsappQrcode', 'smsQrcode', 'websiteQrcode'];
       qrCodes.forEach(id => {
         const element = document.getElementById(id);
         if (element && element.querySelector('canvas')) {

@@ -36,15 +36,28 @@ export class FormHandler {
       logoData: window.logoData
     };
     localStorage.setItem('vcardFormData', JSON.stringify(formData));
+
+    // Store QR code data
+    const qrcodeDiv = document.getElementById('qrcode');
+    const whatsappQrcodeDiv = document.getElementById('whatsappQrcode');
+    const smsQrcodeDiv = document.getElementById('smsQrcode');
+    const websiteQrcodeDiv = document.getElementById('websiteQrcode');
+
+    let qrData = {
+      vcard: qrcodeDiv?.getAttribute('data-content'),
+      whatsapp: whatsappQrcodeDiv?.getAttribute('data-content'),
+      sms: smsQrcodeDiv?.getAttribute('data-content'),
+      website: websiteQrcodeDiv?.getAttribute('data-content')
+    };
+    localStorage.setItem('qrData', JSON.stringify(qrData));
   }
 
   static restoreFormValues() {
     let savedData = localStorage.getItem('vcardFormData');
-    console.log('Saved data from localStorage:', savedData);
-    
+    let savedQRData = localStorage.getItem('qrData');
+
     if (savedData) {
-      let formData = JSON.parse(savedData);
-      console.log('Parsed form data:', formData);
+      const formData = JSON.parse(savedData);
       
       // Restore form values
       if (formData.company) document.getElementById('company').value = formData.company;
@@ -55,57 +68,47 @@ export class FormHandler {
       if (formData.whatsappMessage) document.getElementById('whatsappMessage').value = formData.whatsappMessage;
       if (formData.smsMessage) document.getElementById('smsMessage').value = formData.smsMessage;
       
-      // Restore logo source selection
-      if (formData.logoSource) {
-        console.log('Restoring logo source:', formData.logoSource);
-        
-        // Uncheck all radio buttons first
-        document.querySelectorAll('input[name="logoSource"]').forEach(radio => {
-          radio.checked = false;
-        });
-        
-        // Check the saved radio button
-        let radio = document.querySelector(`input[name="logoSource"][value="${formData.logoSource}"]`);
-        console.log('Found radio button:', radio);
-        
-        if (radio) {
-          radio.checked = true;
-          console.log('Set radio button checked:', radio.value);
-          
-          // Handle logo upload section visibility
-          let logoUploadSection = document.getElementById('logoUploadSection');
-          if (logoUploadSection) {
-            if (formData.logoSource === 'upload') {
-              logoUploadSection.classList.remove('hidden');
-              console.log('Showing logo upload section');
-            } else {
-              logoUploadSection.classList.add('hidden');
-              console.log('Hiding logo upload section');
-            }
-          }
-        } else {
-          console.warn('Could not find radio button for value:', formData.logoSource);
-        }
-      }
-      
-      // Restore image data
+      // Restore photo and logo data
       if (formData.photoData) {
         window.photoData = formData.photoData;
-        let photoPreview = document.getElementById('previewImage');
-        if (photoPreview) {
-          photoPreview.src = formData.photoData;
-          photoPreview.parentElement.classList.remove('hidden');
+        const photoPreview = document.getElementById('photoPreview');
+        const previewImage = document.getElementById('previewImage');
+        if (photoPreview && previewImage) {
+          photoPreview.classList.remove('hidden');
+          previewImage.src = formData.photoData;
         }
       }
       
       if (formData.logoData) {
         window.logoData = formData.logoData;
-        let logoPreview = document.getElementById('previewLogo');
-        if (logoPreview) {
-          logoPreview.src = formData.logoData;
-          logoPreview.parentElement.classList.remove('hidden');
+      }
+      
+      // Restore logo source selection
+      if (formData.logoSource) {
+        const radioBtn = document.querySelector(`input[name="logoSource"][value="${formData.logoSource}"]`);
+        if (radioBtn) {
+          radioBtn.checked = true;
+          const logoUploadSection = document.getElementById('logoUploadSection');
+          if (logoUploadSection) {
+            if (formData.logoSource === 'upload') {
+              logoUploadSection.classList.remove('hidden');
+            } else {
+              logoUploadSection.classList.add('hidden');
+            }
+          }
         }
       }
+    }
+
+    // Restore QR code data
+    if (savedQRData) {
+      const qrData = JSON.parse(savedQRData);
+      
+      // Set data-content attributes
+      if (qrData.vcard) document.getElementById('qrcode')?.setAttribute('data-content', qrData.vcard);
+      if (qrData.whatsapp) document.getElementById('whatsappQrcode')?.setAttribute('data-content', qrData.whatsapp);
+      if (qrData.sms) document.getElementById('smsQrcode')?.setAttribute('data-content', qrData.sms);
+      if (qrData.website) document.getElementById('websiteQrcode')?.setAttribute('data-content', qrData.website);
       
       // If we have all required data, regenerate QR codes
       if (formData.company && formData.email) {
@@ -120,6 +123,7 @@ export class FormHandler {
         QRCodeHandler.generateVCardQRCode();
         QRCodeHandler.generateWhatsAppQRCode();
         QRCodeHandler.generateSMSQRCode();
+        QRCodeHandler.generateWebsiteQRCode();
         
         // Show download section
         let downloadSection = document.getElementById('downloadSection');

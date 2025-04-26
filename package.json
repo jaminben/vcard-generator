@@ -9,10 +9,12 @@
     "build": "node scripts/build.js",
     "test": "vitest --run",
     "test:coverage": "vitest run --coverage",
-    "dev": "npm run build && npx serve public"
+    "dev": "node scripts/dev.js"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.1.2",
+    "browser-sync": "^3.0.2",
+    "chokidar": "^3.5.3",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
     "serve": "^14.2.1",
