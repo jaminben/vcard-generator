@@ -42,10 +42,10 @@ async function addFooterToHtml() {
 
     // Add footer with timestamp and commit information
     const footer = `
-    <footer class="text-center text-sm text-gray-500 mt-8 py-4">
-        <p>Last updated: ${timestamp}</p>
-        <p>Last commit (${lastCommitRef}): ${lastCommitMessage}</p>
-    </footer>`;
+    <!-- Build information:
+        - Last updated: ${timestamp}
+        - Last commit (${lastCommitRef}): ${lastCommitMessage}
+    -->`;
 
     // Insert footer before the closing body tag
     html = html.replace('</body>', `${footer}</body>`);
