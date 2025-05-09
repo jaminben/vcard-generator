@@ -384,7 +384,7 @@ export class FormHandler {
       whatsappInput.setAttribute('aria-invalid', 'false');
       whatsappInput.setAttribute('aria-label', 'WhatsApp number with country code');
       
-      whatsappInput.addEventListener('input', () => {
+      whatsappInput.addEventListener('keydown', () => {
         const isValid = whatsappInput.validity.valid;
         whatsappInput.setAttribute('aria-invalid', !isValid);
         
