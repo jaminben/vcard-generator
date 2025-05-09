@@ -37,6 +37,14 @@ jobs:
           ls -la public/
           echo "Contents of index.html:"
           cat public/index.html
+
+      - name: Build Webflow Distribution
+        run: npm run build:webflow
+
+      - name: Copy Webflow dist to public/webflow
+        run: |
+          mkdir -p public/webflow
+          cp -r dist/* public/webflow/
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
