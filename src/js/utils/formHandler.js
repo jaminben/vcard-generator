@@ -355,6 +355,7 @@ export class FormHandler {
   static setupPhoneInputs() {
     const phoneInput = document.getElementById('phone');
     const whatsappInput = document.getElementById('whatsapp');
+    let isMirroring = true;
     
     if (phoneInput) {
       phoneInput.pattern = '[0-9+\\s\\(\\)\\-]{10,}';
@@ -370,8 +371,8 @@ export class FormHandler {
           const formattedNumber = this.formatPhoneNumber(phoneInput.value);
           phoneInput.value = formattedNumber;
           
-          // Mirror to WhatsApp if empty
-          if (whatsappInput && (!whatsappInput.value || whatsappInput.value === phoneInput.defaultValue || whatsappInput.value === phoneInput.value)) {
+          // Robust mirroring logic
+          if (isMirroring) {
             whatsappInput.value = formattedNumber;
           }
         }
@@ -390,6 +391,12 @@ export class FormHandler {
         if (isValid) {
           const formattedNumber = this.formatPhoneNumber(whatsappInput.value);
           whatsappInput.value = formattedNumber;
+        }
+        // If user edits WhatsApp to something different, stop mirroring
+        if (whatsappInput.value !== phoneInput.value) {
+          isMirroring = false;
+        } else {
+          isMirroring = true;
         }
       });
     }
