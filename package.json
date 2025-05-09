@@ -2,7 +2,7 @@
   "name": "olark-vcard-generator",
   "version": "1.0.0",
   "description": "A VCard generator for Olark contacts",
-  "main": "src/js/app.js",
+  "main": "src/js/main.js",
   "type": "module",
   "homepage": "https://jaminben.github.io/vcard-generator/",
   "scripts": {
@@ -16,6 +16,7 @@
     "@vitest/coverage-v8": "^3.1.2",
     "browser-sync": "^3.0.2",
     "chokidar": "^3.5.3",
+    "esbuild": "^0.25.4",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
     "serve": "^14.2.1",

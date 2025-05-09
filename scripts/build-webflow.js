@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import esbuild from 'esbuild';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,32 +37,22 @@ async function removeDir(dir) {
     }
 }
 
-async function concatenateJsFiles() {
-    const jsFiles = [
-        'src/js/utils/qrCodeHandler.js',
-        'src/js/utils/formHandler.js',
-        // 'src/js/utils/vcard.js', // Only include if it exists
-        // 'src/js/app.js' // Only include if it exists
-    ];
-
-    let concatenatedJs = '';
-    for (const file of jsFiles) {
-        const content = await readFile(file);
-        concatenatedJs += content + '\n';
-    }
-
-    return concatenatedJs;
-}
-
 async function build() {
     try {
         // Ensure dist directory exists and is empty
         await removeDir('dist');
         await fs.mkdir('dist', { recursive: true });
 
-        // Concatenate JavaScript files
-        const jsContent = await concatenateJsFiles();
-        await fs.writeFile('dist/bundle.js', jsContent);
+        // Use esbuild to bundle and minify JS for Webflow
+        await esbuild.build({
+            entryPoints: ['src/js/main.js'],
+            bundle: true,
+            minify: true,
+            format: 'iife',
+            outfile: 'dist/bundle.js',
+            target: ['es2015'],
+            platform: 'browser',
+        });
 
         // Copy CSS file
         await fs.copyFile('src/css/styles.css', 'dist/styles.css');
