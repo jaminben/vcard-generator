@@ -371,7 +371,7 @@ export class FormHandler {
           phoneInput.value = formattedNumber;
           
           // Mirror to WhatsApp if empty
-          if (whatsappInput && !whatsappInput.value) {
+          if (whatsappInput && (!whatsappInput.value || whatsappInput.value === phoneInput.defaultValue || whatsappInput.value === phoneInput.value)) {
             whatsappInput.value = formattedNumber;
           }
         }
